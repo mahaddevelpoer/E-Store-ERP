@@ -1,0 +1,5 @@
+PySide6>=6.6.0
+supabase>=2.3.0
+requests>=2.31.0
+pydantic>=2.5.0
+reportlab>=4.0.0

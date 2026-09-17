@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Store Desktop System</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --sidebar-bg: #181824;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --border-color: #334155;
+      --accent-blue: #0284c7;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-purple: #7c3aed;
+      --accent-red: #ef4444;
+      --card-hover: #2d3748;
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --sidebar-bg: #f1f5f9;
+      --text-main: #0f172a;
+      --text-sub: #64748b;
+      --border-color: #e2e8f0;
+      --accent-blue: #0284c7;
+      --accent-cyan: #0284c7;
+      --accent-green: #10b981;
+      --accent-purple: #7c3aed;
+      --accent-red: #ef4444;
+      --card-hover: #f1f5f9;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); height: 100vh; width: 100vw; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* Top Workspace (Sidebar + Main Area) */
+    .app-workspace { flex: 1; display: flex; width: 100%; height: calc(100vh - 28px); overflow: hidden; }
+
+    /* Left Navigation Rail (Sidebar) - Classic + Advanced Fluent */
+    .sidebar { width: 250px; min-width: 250px; max-width: 250px; flex-shrink: 0; background-color: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 16px 12px; height: 100%; z-index: 10; }
+    .brand-box { padding: 12px 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-color); }
+    .brand-icon { width: 34px; height: 34px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; color: white; box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3); }
+    .brand-title { font-size: 17px; font-weight: 700; color: var(--text-main); letter-spacing: 0.3px; }
+    
+    .nav-list { display: flex; flex-direction: column; gap: 6px; flex: 1; overflow-y: auto; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 8px; cursor: pointer; color: var(--text-sub); font-weight: 600; font-size: 13px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid transparent; user-select: none; }
+    .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; fill: currentColor; }
+    .nav-item:hover { background-color: var(--card-hover); color: var(--text-main); border-color: var(--border-color); }
+    .nav-item.active { background: linear-gradient(135deg, var(--accent-blue), #0369a1); color: white; border-color: transparent; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); }
+
+    /* Main Content Area */
+    .main-area { flex: 1; display: flex; flex-direction: column; height: 100%; min-width: 0; overflow: hidden; background: var(--bg-color); }
+    .header-bar { height: 60px; min-height: 60px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background-color: var(--card-bg); }
+    .search-input { width: 340px; padding: 9px 14px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); outline: none; font-size: 13px; transition: border-color 0.2s; }
+    .search-input:focus { border-color: var(--accent-blue); }
+    .header-actions { display: flex; gap: 10px; align-items: center; }
+
+    .btn { padding: 8px 16px; border-radius: 7px; border: 1px solid transparent; font-weight: 600; cursor: pointer; font-size: 13px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-primary { background-color: var(--accent-blue); color: white; }
+    .btn-success { background-color: var(--accent-green); color: white; }
+    .btn-danger { background-color: var(--accent-red); color: white; }
+    .btn-secondary { background-color: var(--card-bg); border-color: var(--border-color); color: var(--text-main); }
+    .btn:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    /* Bottom Full Window Indicator Line & Status Bar */
+    .bottom-status-line { 
+      height: 32px; 
+      min-height: 32px; 
+      width: 100%; 
+      background: var(--sidebar-bg); 
+      border-top: 3px solid #ffffff; /* Bright solid white separator line across full width */
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      padding: 0 18px; 
+      font-size: 12px; 
+      font-weight: 700; 
+      color: var(--text-main); 
+      z-index: 1000; 
+      user-select: none; 
+      box-shadow: 0 -3px 12px rgba(255, 255, 255, 0.1); 
+    }
+    .status-left, .status-right { display: flex; align-items: center; gap: 14px; }
+    .status-indicator-dot { width: 9px; height: 9px; border-radius: 50%; background-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); display: inline-block; }
+    .status-badge { background: rgba(2, 132, 199, 0.2); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.5); border-radius: 4px; padding: 2px 10px; font-size: 11.5px; }
+
+    .content-body { flex: 1; padding: 24px; overflow-y: auto; display: none; }
+    .content-body.active { display: block !important; }
+
+    /* Overview Dashboard Metrics Grid */
+    .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .metric-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; }
+    .metric-title { font-size: 12px; color: var(--text-sub); margin-bottom: 6px; }
+    .metric-val { font-size: 22px; font-weight: 700; color: var(--text-main); }
+
+    /* Category Filter Pills */
+    .pills-bar { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+    .pill { padding: 6px 14px; border-radius: 20px; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-sub); font-size: 12px; font-weight: 600; cursor: pointer; }
+    .pill.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
+
+    /* Product Cards Grid */
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+    .product-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 8px; transition: transform 0.2s, border 0.2s; }
+    .product-card:hover { border-color: var(--accent-cyan); transform: translateY(-2px); }
+    .product-thumb { height: 90px; background-color: var(--bg-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--accent-cyan); }
+    .product-name { font-size: 14px; font-weight: 600; color: var(--text-main); height: 38px; overflow: hidden; }
+    .product-price { font-size: 15px; font-weight: 700; color: var(--accent-cyan); }
+    .product-stock { font-size: 11px; color: var(--text-sub); }
+
+    /* USB Media Copying Service Bar */
+    .media-bar { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; margin-top: 24px; display: flex; gap: 12px; align-items: center; }
+
+    /* Floating Cart Drawer / Bar */
+    .cart-summary-bar { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px 24px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
+
+    /* Windows 11 Fluent Modal Window */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 999; }
+    .modal-overlay.active { display: flex; }
+    .modal-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; width: 620px; max-height: 85vh; display: flex; flex-direction: column; padding: 24px; gap: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
+
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th { background: var(--bg-color); color: var(--accent-cyan); text-align: left; padding: 12px; font-size: 12px; border-bottom: 1px solid var(--border-color); }
+    td { padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-main); }
+  </style>
+</head>
+<body>
+  <!-- Top Workspace: Sidebar + Main Area -->
+  <div class="app-workspace">
+    <!-- Left Sidebar Navigation Rail -->
+    <div class="sidebar">
+      <div class="brand-box">
+        <div class="brand-icon">E</div>
+        <div>
+          <div class="brand-title">E-Store POS</div>
+          <div style="font-size: 10px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px;">Business Edition</div>
+        </div>
+      </div>
+      <div class="nav-list">
+        <div class="nav-item active" onclick="switchTab('dashboard', this)">
+          <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+          Overview Dashboard
+        </div>
+        <div class="nav-item" onclick="switchTab('pos', this)">
+          <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96C5 16.1 6.9 18 9 18h12v-2H9.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0023.5 5H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+          POS Store
+        </div>
+        <div class="nav-item" onclick="switchTab('returns', this)">
+          <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+          Sales Returns
+        </div>
+        <div class="nav-item" onclick="switchTab('products', this)">
+          <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.5 15.5 0 12.36 0c-1.74 0-3.31.81-4.36 2.07C6.95.81 5.38 0 3.64 0 .5 0-2 2.5-2 4.64c0 .48.11.92.18 1.36H-2v14a2 2 0 002 2h16a2 2 0 002-2V6z"/></svg>
+          Hardware Products
+        </div>
+        <div class="nav-item" onclick="switchTab('categories', this)">
+          <svg viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11z"/><circle cx="17.5" cy="17.5" r="4.5"/><rect x="2" y="13" width="8" height="8"/></svg>
+          Category Manager
+        </div>
+        <div class="nav-item" onclick="switchTab('udhaar', this)">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm4 18H6V4h7v5h5v11zM9 13h6v2H9zm0 3h6v2H9zm0-6h4v2H9z"/></svg>
+          Udhaar Ledger
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Body -->
+    <div class="main-area">
+    <div class="header-bar">
+      <input type="text" class="search-input" id="globalSearch" placeholder="Search products, barcodes..." oninput="handleSearch(this.value)">
+      <div class="header-actions">
+        <button class="btn btn-secondary" onclick="toggleTheme()">Theme: <span id="themeLabel">Dark</span></button>
+        <button class="btn btn-secondary" onclick="openPairingModal()">Pair Mobile</button>
+        <button class="btn btn-primary" onclick="openSettingsModal()">Preferences</button>
+      </div>
+    </div>
+
+    <!-- 1. OVERVIEW DASHBOARD -->
+    <div class="content-body active" id="tab-dashboard">
+      <h2 style="margin-bottom: 16px;">Business Overview & Financial Capital</h2>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-title">Total Capital Invested (Stock Cost)</div>
+          <div class="metric-val" id="valCapital">PKR 0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Total Stock Valuation</div>
+          <div class="metric-val" id="valStock">PKR 0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Gross Business Revenue</div>
+          <div class="metric-val" id="valGrossRev">PKR 0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Net Business Profit</div>
+          <div class="metric-val" style="color: var(--accent-green);" id="valProfit">PKR 0.00</div>
+        </div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-title">Hardware Sales Revenue</div>
+          <div class="metric-val" id="valHwRev">PKR 0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">USB Media Copying Income</div>
+          <div class="metric-val" id="valMediaRev">PKR 0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Total Products in Stock</div>
+          <div class="metric-val" id="valProductsCount">0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Low Stock Alert Count</div>
+          <div class="metric-val" style="color: var(--accent-red);" id="valLowStock">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. POS STORE TAB -->
+    <div class="content-body" id="tab-pos">
+      <div class="pills-bar" id="categoryPills">
+        <!-- Dynamic Pills -->
+      </div>
+
+      <div class="products-grid" id="productsGrid">
+        <!-- Dynamic Cards -->
+      </div>
+
+      <div class="media-bar">
+        <strong style="white-space: nowrap;">USB Movie/Song Download:</strong>
+        <select class="search-input" id="mediaType" style="width: auto;">
+          <option>HD Movie Copy</option>
+          <option>Songs MP3 Batch</option>
+          <option>Software Download</option>
+          <option>Custom USB Transfer</option>
+        </select>
+        <label>Qty:</label>
+        <input type="number" class="search-input" id="mediaQty" value="1" style="width: 70px;">
+        <label>Custom Price (PKR):</label>
+        <input type="number" class="search-input" id="mediaPrice" value="150" style="width: 110px;">
+        <button class="btn btn-success" onclick="addMediaServiceToCart()">Add Media Service</button>
+      </div>
+
+      <div class="cart-summary-bar">
+        <div>
+          <span style="font-size: 14px; color: var(--text-sub);">Invoice Cart:</span>
+          <strong id="cartItemCount" style="margin-left: 8px; font-size: 16px;">0 items</strong>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <span style="font-size: 18px; font-weight: bold;" id="cartTotalDisplay">Total: PKR 0.00</span>
+          <button class="btn btn-success" style="padding: 12px 24px; font-size: 15px;" onclick="openCheckoutModal()">Proceed to Payment & Billing</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. SALES RETURNS TAB -->
+    <div class="content-body" id="tab-returns">
+      <h2>Sales Returns & Item Refunds</h2>
+      <div style="display: flex; gap: 10px; margin-top: 16px;">
+        <input type="text" class="search-input" id="returnReceiptInput" placeholder="Enter Invoice Receipt Number (INV-XXXXXXXX...)" style="width: 380px;">
+        <button class="btn btn-primary" onclick="searchReturnInvoice()">Search Invoice</button>
+      </div>
+      <div id="returnStatus" style="margin-top: 12px; color: var(--text-sub);"></div>
+      <table id="returnTable">
+        <thead>
+          <tr>
+            <th>Item Name</th><th>Type</th><th>Qty Purchased</th><th>Unit Price</th><th>Total</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="returnTbody"></tbody>
+      </table>
+    </div>
+
+    <!-- 4. HARDWARE PRODUCTS MANAGER TAB -->
+    <div class="content-body" id="tab-products">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2>Hardware Accessories Manager</h2>
+        <button class="btn btn-success" onclick="openAddProductModal()">+ Add New Product</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th><th>Item Name</th><th>Category</th><th>Cost Price</th><th>Selling Price</th><th>Stock</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="productsTbody"></tbody>
+      </table>
+    </div>
+
+    <!-- 5. CATEGORY MANAGER TAB -->
+    <div class="content-body" id="tab-categories">
+      <h2>Custom Category Manager</h2>
+      <div style="display: flex; gap: 10px; margin: 16px 0;">
+        <input type="text" class="search-input" id="newCatInput" placeholder="Enter category name...">
+        <button class="btn btn-success" onclick="addCategory()">Add Category</button>
+      </div>
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Category Name</th><th>Action</th></tr>
+        </thead>
+        <tbody id="categoriesTbody"></tbody>
+      </table>
+    </div>
+
+    <!-- 6. UDHAAR LEDGER TAB -->
+    <div class="content-body" id="tab-udhaar">
+      <h2>Udhaar / Credit Ledger</h2>
+    </div>
+    </div><!-- End of main-area -->
+  </div>
+  <!-- End of app-workspace -->
+
+  <!-- Bottom Full-Width Status Line & Maximized Window Indicator -->
+  <div class="bottom-status-line">
+    <div class="status-left">
+      <span class="status-indicator-dot"></span>
+      <span id="windowModeText">E-Store Desktop System: Online & Active</span>
+      <span class="status-badge" id="screenStateBadge">Standard Window</span>
+    </div>
+    <div class="status-right">
+      <span id="dbStatus">SQLite Database: Connected</span>
+      <span>|</span>
+      <span id="currentTimeDisplay">--:--</span>
+    </div>
+  </div>
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Invoice Checkout & Payment</h3>
+        <button class="btn btn-secondary" onclick="closeCheckoutModal()">X</button>
+      </div>
+      <div style="flex: 1; overflow-y: auto;">
+        <table>
+          <thead>
+            <tr><th>Item Name</th><th>Type</th><th>Qty</th><th>Price</th><th>Action</th></tr>
+          </thead>
+          <tbody id="checkoutCartTbody"></tbody>
+        </table>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+        <div style="display: flex; justify-content: space-between;">
+          <span>Subtotal:</span>
+          <strong id="modalSubtotal">PKR 0.00</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Discount (PKR):</span>
+          <input type="number" class="search-input" id="modalDiscount" value="0" style="width: 100px;" oninput="recalcModalTotal()">
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; color: var(--accent-green);">
+          <span>Final Payment Total:</span>
+          <span id="modalFinalTotal">PKR 0.00</span>
+        </div>
+        <button class="btn btn-success" style="width: 100%; padding: 14px; font-size: 16px;" onclick="completePOSCheckout()">Complete Sale & Print Receipt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD PRODUCT MODAL -->
+  <div class="modal-overlay" id="addProductModal">
+    <div class="modal-card" style="width: 440px;">
+      <div class="modal-header">
+        <h3>Add New Hardware Accessory</h3>
+        <button class="btn btn-secondary" onclick="closeAddProductModal()">X</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 12px;">
+        <input type="text" class="search-input" id="pName" placeholder="Product Name" style="width: 100%;">
+        <select class="search-input" id="pCat" style="width: 100%;"></select>
+        <input type="text" class="search-input" id="pBarcode" placeholder="Barcode / SKU" style="width: 100%;">
+        <input type="number" class="search-input" id="pCost" placeholder="Cost Price (PKR)" style="width: 100%;">
+        <input type="number" class="search-input" id="pPrice" placeholder="Selling Price (PKR)" style="width: 100%;">
+        <input type="number" class="search-input" id="pStock" placeholder="Stock Quantity" style="width: 100%;">
+        <button class="btn btn-success" style="padding: 12px;" onclick="saveProduct()">Save Product</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-card" style="width: 500px;">
+      <div class="modal-header">
+        <h3>Preferences & Business Settings</h3>
+        <button class="btn btn-secondary" onclick="closeSettingsModal()">X</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 12px; max-height: 70vh; overflow-y: auto;">
+        <label style="font-size: 12px; font-weight: 600; color: var(--accent-cyan);">Store Details:</label>
+        <input type="text" class="search-input" id="sShopName" placeholder="Shop / Business Name" value="E-Store" style="width: 100%;">
+        <input type="text" class="search-input" id="sPhone" placeholder="Phone (+92 300 1234567)" style="width: 100%;">
+        <input type="text" class="search-input" id="sAddress" placeholder="Shop Address..." style="width: 100%;">
+        <input type="text" class="search-input" id="sReceiptFooter" placeholder="Receipt Footer Message" value="Thank you for shopping at E-Store!" style="width: 100%;">
+
+        <hr style="border: none; border-top: 1px solid var(--border-color); margin: 6px 0;">
+
+        <label style="font-size: 12px; font-weight: 600; color: var(--accent-cyan);">Supabase Cloud Sync (Realtime & Mobile App):</label>
+        <p style="font-size: 11px; color: var(--text-sub);">Enter your Supabase Project URL and Anon/Service Key to sync sales to mobile:</p>
+        <input type="text" class="search-input" id="sSupabaseUrl" placeholder="https://xyzproject.supabase.co" style="width: 100%;">
+        <input type="password" class="search-input" id="sSupabaseKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." style="width: 100%;">
+
+        <button class="btn btn-primary" style="padding: 12px; margin-top: 8px;" onclick="saveSettings()">Save Preferences & Cloud Keys</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAIRING MODAL -->
+  <div class="modal-overlay" id="pairingModal">
+    <div class="modal-card" style="width: 400px; text-align: center;">
+      <div class="modal-header">
+        <h3>Mobile App Pairing</h3>
+        <button class="btn btn-secondary" onclick="closePairingModal()">X</button>
+      </div>
+      <div style="padding: 20px 0;">
+        <p style="color: var(--text-sub); font-size: 13px;">Enter this 6-digit OTP code in your E-Store mobile app to sync inventory:</p>
+        <div id="pairCodeDisplay" style="font-size: 38px; font-weight: 800; letter-spacing: 8px; color: var(--accent-cyan); margin: 20px 0; font-family: monospace;">------</div>
+        <button class="btn btn-primary" onclick="generateNewPairCode()">Generate New Code</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let cart = [];
+    let activeCategory = "All";
+
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      document.querySelectorAll('.content-body').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('tab-' + tabId).classList.add('active');
+      if (tabId === 'dashboard') loadDashboard();
+      if (tabId === 'pos') loadPOSData();
+      if (tabId === 'products') loadProductsTable();
+      if (tabId === 'categories') loadCategoriesTable();
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      document.getElementById('themeLabel').innerText = next === 'dark' ? 'Dark' : 'Light';
+    }
+
+    // Window pywebview native bridge calls
+    async function loadDashboard() {
+      if (window.pywebview) {
+        const m = await window.pywebview.api.get_dashboard_metrics();
+        document.getElementById('valCapital').innerText = 'PKR ' + m.capital_invested.toFixed(2);
+        document.getElementById('valStock').innerText = 'PKR ' + m.stock_valuation.toFixed(2);
+        document.getElementById('valGrossRev').innerText = 'PKR ' + m.gross_revenue.toFixed(2);
+        document.getElementById('valProfit').innerText = 'PKR ' + m.net_profit.toFixed(2);
+        document.getElementById('valHwRev').innerText = 'PKR ' + m.total_hardware_revenue.toFixed(2);
+        document.getElementById('valMediaRev').innerText = 'PKR ' + m.total_media_revenue.toFixed(2);
+        document.getElementById('valProductsCount').innerText = m.total_products_count;
+        document.getElementById('valLowStock').innerText = m.low_stock_count;
+      }
+    }
+
+    async function loadPOSData() {
+      if (!window.pywebview) return;
+      const categories = await window.pywebview.api.get_categories();
+      const pillsContainer = document.getElementById('categoryPills');
+      pillsContainer.innerHTML = `<div class="pill ${activeCategory === 'All' ? 'active' : ''}" onclick="selectCategory('All')">All</div>`;
+      categories.forEach(c => {
+        pillsContainer.innerHTML += `<div class="pill ${activeCategory === c.name ? 'active' : ''}" onclick="selectCategory('${c.name}')">${c.name}</div>`;
+      });
+      loadProductCards();
+    }
+
+    async function loadProductCards() {
+      const query = document.getElementById('globalSearch').value;
+      const products = await window.pywebview.api.search_products(query, activeCategory);
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = '';
+      if (products.length === 0) {
+        grid.innerHTML = '<div style="color: var(--text-sub); grid-column: 1/-1; padding: 40px; text-align: center;">No products found in this category. Add new products in Hardware Products tab.</div>';
+        return;
+      }
+      products.forEach(p => {
+        grid.innerHTML += `
+          <div class="product-card">
+            <div class="product-thumb">[ ${p.category_name} ]</div>
+            <div class="product-name">${p.name}</div>
+            <div class="product-price">PKR ${p.selling_price.toFixed(2)}</div>
+            <div class="product-stock">Stock: ${p.stock_quantity}</div>
+            <button class="btn btn-success" style="margin-top: 4px;" onclick='addHardwareToCart(${JSON.stringify(p)})'>Add to Invoice</button>
+          </div>
+        `;
+      });
+    }
+
+    function selectCategory(catName) {
+      activeCategory = catName;
+      loadPOSData();
+    }
+
+    function addHardwareToCart(p) {
+      const existing = cart.find(i => i.id === p.id && i.item_type === 'Hardware');
+      if (existing) {
+        existing.quantity++;
+      } else {
+        cart.push({
+          id: p.id,
+          name: p.name,
+          item_type: 'Hardware',
+          selling_price: p.selling_price,
+          cost_price: p.cost_price,
+          quantity: 1
+        });
+      }
+      updateCartSummary();
+    }
+
+    function addMediaServiceToCart() {
+      const type = document.getElementById('mediaType').value;
+      const qty = parseInt(document.getElementById('mediaQty').value) || 1;
+      const price = parseFloat(document.getElementById('mediaPrice').value) || 0;
+      cart.push({
+        id: null,
+        name: `${type} (${qty} items)`,
+        item_type: 'MediaService',
+        selling_price: price,
+        cost_price: 0,
+        quantity: 1
+      });
+      updateCartSummary();
+    }
+
+    function removeCartItem(idx) {
+      cart.splice(idx, 1);
+      updateCartSummary();
+      renderCheckoutCart();
+    }
+
+    function updateCartSummary() {
+      const total = cart.reduce((acc, i) => acc + (i.quantity * i.selling_price), 0);
+      document.getElementById('cartItemCount').innerText = `${cart.length} items`;
+      document.getElementById('cartTotalDisplay').innerText = `Total: PKR ${total.toFixed(2)}`;
+    }
+
+    function openCheckoutModal() {
+      if (cart.length === 0) {
+        alert("Please add products or media services before proceeding to payment!");
+        return;
+      }
+      renderCheckoutCart();
+      document.getElementById('checkoutModal').classList.add('active');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').classList.remove('active');
+    }
+
+    function renderCheckoutCart() {
+      const tbody = document.getElementById('checkoutCartTbody');
+      tbody.innerHTML = '';
+      cart.forEach((i, idx) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${i.name}</td>
+            <td>${i.item_type}</td>
+            <td>${i.quantity}</td>
+            <td>PKR ${i.selling_price.toFixed(2)}</td>
+            <td><button class="btn btn-danger" style="padding: 4px 8px; font-size: 11px;" onclick="removeCartItem(${idx})">Cancel</button></td>
+          </tr>
+        `;
+      });
+      recalcModalTotal();
+    }
+
+    function recalcModalTotal() {
+      const sub = cart.reduce((acc, i) => acc + (i.quantity * i.selling_price), 0);
+      const disc = parseFloat(document.getElementById('modalDiscount').value) || 0;
+      const finalVal = Math.max(0, sub - disc);
+      document.getElementById('modalSubtotal').innerText = 'PKR ' + sub.toFixed(2);
+      document.getElementById('modalFinalTotal').innerText = 'PKR ' + finalVal.toFixed(2);
+    }
+
+    async function completePOSCheckout() {
+      const disc = parseFloat(document.getElementById('modalDiscount').value) || 0;
+      const res = await window.pywebview.api.process_sale(cart, "Cash", disc);
+      alert(`Invoice #${res.receipt_number} Generated Successfully!\nTotal: PKR ${res.total_amount.toFixed(2)}\nPush notification sent to owner phone.`);
+      cart = [];
+      updateCartSummary();
+      closeCheckoutModal();
+      loadDashboard();
+      loadProductCards();
+    }
+
+    async function loadProductsTable() {
+      const products = await window.pywebview.api.get_all_products();
+      const tbody = document.getElementById('productsTbody');
+      tbody.innerHTML = '';
+      products.forEach(p => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${p.id.substring(0, 8)}</td>
+            <td>${p.name}</td>
+            <td>${p.category_name}</td>
+            <td>PKR ${p.cost_price.toFixed(2)}</td>
+            <td>PKR ${p.selling_price.toFixed(2)}</td>
+            <td>${p.stock_quantity}</td>
+            <td><button class="btn btn-danger" style="padding: 4px 8px;" onclick="deleteProduct('${p.id}')">Delete</button></td>
+          </tr>
+        `;
+      });
+    }
+
+    async function loadCategoriesTable() {
+      const cats = await window.pywebview.api.get_categories();
+      const tbody = document.getElementById('categoriesTbody');
+      tbody.innerHTML = '';
+      cats.forEach(c => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${c.id.substring(0, 8)}</td>
+            <td>${c.name}</td>
+            <td><button class="btn btn-danger" style="padding: 4px 8px;" onclick="deleteCategory('${c.id}')">Delete</button></td>
+          </tr>
+        `;
+      });
+    }
+
+    async function addCategory() {
+      const val = document.getElementById('newCatInput').value.trim();
+      if (!val) return;
+      await window.pywebview.api.add_category(val);
+      document.getElementById('newCatInput').value = '';
+      loadCategoriesTable();
+    }
+
+    async function deleteCategory(id) {
+      if (confirm("Delete category?")) {
+        await window.pywebview.api.delete_category(id);
+        loadCategoriesTable();
+      }
+    }
+
+    async function deleteProduct(id) {
+      if (confirm("Delete product?")) {
+        await window.pywebview.api.delete_product(id);
+        loadProductsTable();
+      }
+    }
+
+    async function openAddProductModal() {
+      const cats = await window.pywebview.api.get_categories();
+      const select = document.getElementById('pCat');
+      select.innerHTML = '';
+      cats.forEach(c => select.innerHTML += `<option>${c.name}</option>`);
+      document.getElementById('addProductModal').classList.add('active');
+    }
+
+    function closeAddProductModal() {
+      document.getElementById('addProductModal').classList.remove('active');
+    }
+
+    async function saveProduct() {
+      const name = document.getElementById('pName').value.trim();
+      if (!name) return alert("Product Name is required");
+      await window.pywebview.api.add_or_update_product({
+        name: name,
+        category_name: document.getElementById('pCat').value,
+        barcode: document.getElementById('pBarcode').value,
+        cost_price: parseFloat(document.getElementById('pCost').value) || 0,
+        selling_price: parseFloat(document.getElementById('pPrice').value) || 0,
+        stock_quantity: parseInt(document.getElementById('pStock').value) || 0
+      });
+      closeAddProductModal();
+      loadProductsTable();
+    }
+
+    async function searchReturnInvoice() {
+      const r = document.getElementById('returnReceiptInput').value.trim();
+      if (!r) return;
+      const sale = await window.pywebview.api.get_sale_by_receipt(r);
+      const statusDiv = document.getElementById('returnStatus');
+      const tbody = document.getElementById('returnTbody');
+      tbody.innerHTML = '';
+      if (!sale) {
+        statusDiv.innerText = `Invoice #${r} not found.`;
+        return;
+      }
+      statusDiv.innerText = `Invoice #${sale.receipt_number} | Date: ${sale.created_at.substring(0, 16)} | Total: PKR ${sale.total_amount.toFixed(2)}`;
+      sale.items.forEach(i => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${i.product_name}</td>
+            <td>${i.item_type}</td>
+            <td>${i.quantity}</td>
+            <td>PKR ${i.unit_price.toFixed(2)}</td>
+            <td>PKR ${i.total_price.toFixed(2)}</td>
+            <td><button class="btn btn-danger" style="padding: 4px 8px;" onclick="processReturn('${sale.id}', '${i.id}', ${i.quantity})">Return Item</button></td>
+          </tr>
+        `;
+      });
+    }
+
+    async function processReturn(saleId, itemId, maxQty) {
+      const qty = parseInt(prompt(`Enter return quantity (1 to ${maxQty}):`, "1"));
+      if (!qty || qty < 1 || qty > maxQty) return;
+      const res = await window.pywebview.api.process_sales_return(saleId, itemId, qty, "Customer Return");
+      alert(`Refund Completed for ${res.returned_qty} x ${res.product_name}!\nRefund Amount: PKR ${res.refund_amount.toFixed(2)}`);
+      searchReturnInvoice();
+      loadDashboard();
+    }
+
+    function handleSearch(v) {
+      loadProductCards();
+    }
+
+    function openSettingsModal() {
+      loadSettingsData();
+      document.getElementById('settingsModal').classList.add('active');
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('settingsModal').classList.remove('active');
+    }
+
+    async function loadSettingsData() {
+      if (!window.pywebview) return;
+      const s = await window.pywebview.api.get_shop_settings();
+      if (s) {
+        document.getElementById('sShopName').value = s.shop_name || 'E-Store';
+        document.getElementById('sPhone').value = s.phone || '';
+        document.getElementById('sAddress').value = s.address || '';
+        document.getElementById('sReceiptFooter').value = s.receipt_footer || '';
+        document.getElementById('sSupabaseUrl').value = s.supabase_url || '';
+        document.getElementById('sSupabaseKey').value = s.supabase_key || '';
+      }
+    }
+
+    async function saveSettings() {
+      if (!window.pywebview) return;
+      const s = {
+        shop_name: document.getElementById('sShopName').value.trim() || 'E-Store',
+        phone: document.getElementById('sPhone').value.trim(),
+        address: document.getElementById('sAddress').value.trim(),
+        receipt_footer: document.getElementById('sReceiptFooter').value.trim(),
+        supabase_url: document.getElementById('sSupabaseUrl').value.trim(),
+        supabase_key: document.getElementById('sSupabaseKey').value.trim(),
+        theme_mode: document.documentElement.getAttribute('data-theme') || 'dark',
+        currency: 'PKR'
+      };
+      await window.pywebview.api.save_shop_settings(s);
+      document.querySelector('.brand-title').innerText = s.shop_name + ' POS';
+      closeSettingsModal();
+      alert('Preferences & Supabase settings saved successfully!');
+    }
+
+    function openPairingModal() {
+      generateNewPairCode();
+      document.getElementById('pairingModal').classList.add('active');
+    }
+
+    function closePairingModal() {
+      document.getElementById('pairingModal').classList.remove('active');
+    }
+
+    async function generateNewPairCode() {
+      if (!window.pywebview) return;
+      const code = await window.pywebview.api.generate_pair_code();
+      document.getElementById('pairCodeDisplay').innerText = code;
+    }
+
+    function updateTime() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const el = document.getElementById('currentTimeDisplay');
+      if (el) el.innerText = timeStr;
+    }
+
+    function checkWindowMaximizedState() {
+      const isMax = (window.innerWidth >= (screen.availWidth - 10) && window.innerHeight >= (screen.availHeight - 10));
+      const badge = document.getElementById('screenStateBadge');
+      const text = document.getElementById('windowModeText');
+      if (badge && text) {
+        if (isMax) {
+          badge.innerText = "Maximized View";
+          badge.style.background = "rgba(16, 185, 129, 0.15)";
+          badge.style.color = "var(--accent-green)";
+          badge.style.borderColor = "var(--accent-green)";
+          text.innerText = "E-Store Desktop System: Maximized Full Screen";
+        } else {
+          badge.innerText = `Windowed (${window.innerWidth}x${window.innerHeight})`;
+          badge.style.background = "rgba(2, 132, 199, 0.15)";
+          badge.style.color = "var(--accent-cyan)";
+          badge.style.borderColor = "rgba(6, 182, 212, 0.3)";
+          text.innerText = "E-Store Desktop System: Normal Window";
+        }
+      }
+    }
+
+    window.addEventListener('resize', checkWindowMaximizedState);
+    setInterval(updateTime, 1000);
+
+    function initApp() {
+      loadDashboard();
+      loadSettingsData();
+      updateTime();
+      checkWindowMaximizedState();
+    }
+
+    // Direct event listener
+    window.addEventListener('pywebviewready', initApp);
+
+    // DOMContentLoaded fallback + safety interval in case pywebview ready fired earlier
+    document.addEventListener('DOMContentLoaded', () => {
+      updateTime();
+      checkWindowMaximizedState();
+      let retries = 0;
+      const checkInterval = setInterval(() => {
+        retries++;
+        if (window.pywebview && window.pywebview.api) {
+          clearInterval(checkInterval);
+          initApp();
+        } else if (retries > 20) {
+          clearInterval(checkInterval);
+        }
+      }, 100);
+    });
+  </script>
+</body>
+</html>
