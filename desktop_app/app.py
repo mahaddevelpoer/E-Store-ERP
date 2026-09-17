@@ -56,6 +56,18 @@ class EStoreJSAPI:
     def generate_pair_code(self):
         return self.pairing.generate_pair_code()
 
+    def get_all_udhaar_records(self):
+        return self.db.get_all_udhaar_records()
+
+    def add_udhaar_record(self, party_name, party_type, amount, entry_type, notes=""):
+        return self.db.add_udhaar_record(party_name, party_type, float(amount), entry_type, notes)
+
+    def delete_udhaar_record(self, record_id):
+        return self.db.delete_udhaar_record(record_id)
+
+    def get_udhaar_summary(self):
+        return self.db.get_udhaar_summary()
+
 def main():
     db = LocalDatabaseManager()
     pairing = DevicePairingService(db)

@@ -288,7 +288,7 @@
       <table>
         <thead>
           <tr>
-            <th>ID</th><th>Item Name</th><th>Category</th><th>Cost Price</th><th>Selling Price</th><th>Stock</th><th>Action</th>
+            <th>Image</th><th>ID</th><th>Item Name</th><th>Category</th><th>Cost Price</th><th>Selling Price</th><th>Stock</th><th>Action</th>
           </tr>
         </thead>
         <tbody id="productsTbody"></tbody>
@@ -312,7 +312,49 @@
 
     <!-- 6. UDHAAR LEDGER TAB -->
     <div class="content-body" id="tab-udhaar">
-      <h2>Udhaar / Credit Ledger</h2>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2>Udhaar / Credit Ledger (Customer & Supplier Khata)</h2>
+        <button class="btn btn-success" onclick="openAddUdhaarModal()">+ Add Udhaar Entry</button>
+      </div>
+
+      <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;">
+        <div class="metric-card">
+          <div class="metric-title">Total Customer Udhaar Due (Wasool Karna Hai)</div>
+          <div class="metric-val" style="color: var(--accent-red);" id="valCustomerUdhaar">PKR 0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Supplier Udhaar Payable (Dena Hai)</div>
+          <div class="metric-val" style="color: var(--accent-cyan);" id="valSupplierUdhaar">PKR 0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Total Khata Records</div>
+          <div class="metric-val" id="valUdhaarCount">0</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; margin-bottom: 14px;">
+        <input type="text" class="search-input" id="udhaarSearchInput" placeholder="Filter by person name or phone..." oninput="filterUdhaarTable()" style="flex: 1;">
+        <select class="search-input" id="udhaarFilterType" onchange="filterUdhaarTable()" style="width: 180px;">
+          <option value="All">All Parties</option>
+          <option value="Customer">Customer</option>
+          <option value="Supplier">Supplier</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Date & Time</th>
+            <th>Party Name</th>
+            <th>Party Type</th>
+            <th>Entry Type</th>
+            <th>Amount (PKR)</th>
+            <th>Notes / Phone</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="udhaarTbody"></tbody>
+      </table>
     </div>
     </div><!-- End of main-area -->
   </div>
@@ -377,7 +419,16 @@
         <input type="number" class="search-input" id="pCost" placeholder="Cost Price (PKR)" style="width: 100%;">
         <input type="number" class="search-input" id="pPrice" placeholder="Selling Price (PKR)" style="width: 100%;">
         <input type="number" class="search-input" id="pStock" placeholder="Stock Quantity" style="width: 100%;">
-        <button class="btn btn-success" style="padding: 12px;" onclick="saveProduct()">Save Product</button>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <input type="file" id="pImageFile" accept="image/*" style="display: none;" onchange="handleImageFileUpload(event)">
+          <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="document.getElementById('pImageFile').click()">Choose Product Photo</button>
+          <button type="button" class="btn btn-danger" id="btnClearImg" style="display: none; padding: 8px 12px;" onclick="clearProductImage()">Remove Photo</button>
+        </div>
+        <div id="imagePreviewBox" style="display: none; text-align: center; background: var(--bg-color); border: 1px dashed var(--border-color); border-radius: 8px; padding: 10px;">
+          <img id="pImagePreview" src="" style="max-height: 100px; max-width: 100%; border-radius: 6px; object-fit: contain;">
+        </div>
+        <input type="hidden" id="pImageData">
+        <button class="btn btn-success" style="padding: 12px; margin-top: 4px;" onclick="saveProduct()">Save Product</button>
       </div>
     </div>
   </div>
@@ -423,6 +474,36 @@
     </div>
   </div>
 
+  <!-- ADD UDHAAR ENTRY MODAL -->
+  <div class="modal-overlay" id="addUdhaarModal">
+    <div class="modal-card" style="width: 440px;">
+      <div class="modal-header">
+        <h3>Add Udhaar / Khata Record</h3>
+        <button class="btn btn-secondary" onclick="closeAddUdhaarModal()">X</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 12px;">
+        <label style="font-size: 12px; font-weight: 600; color: var(--accent-cyan);">Party Type:</label>
+        <select class="search-input" id="uPartyType" style="width: 100%;" onchange="updateUdhaarEntryTypeOptions()">
+          <option value="Customer">Customer (Grahak)</option>
+          <option value="Supplier">Supplier (Vendor)</option>
+        </select>
+
+        <input type="text" class="search-input" id="uPartyName" placeholder="Person / Shop Name" style="width: 100%;">
+        
+        <label style="font-size: 12px; font-weight: 600; color: var(--accent-cyan);">Transaction Type:</label>
+        <select class="search-input" id="uEntryType" style="width: 100%;">
+          <option value="Given">Given / Baki (Udhaar Diya)</option>
+          <option value="Received">Received / Wasooli (Udhaar Wapas Aaya)</option>
+        </select>
+
+        <input type="number" class="search-input" id="uAmount" placeholder="Amount in PKR" style="width: 100%;">
+        <input type="text" class="search-input" id="uNotes" placeholder="Phone number, items or remarks..." style="width: 100%;">
+
+        <button class="btn btn-success" style="padding: 12px; margin-top: 4px;" onclick="saveUdhaarRecord()">Save Khata Entry</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let cart = [];
     let activeCategory = "All";
@@ -436,6 +517,7 @@
       if (tabId === 'pos') loadPOSData();
       if (tabId === 'products') loadProductsTable();
       if (tabId === 'categories') loadCategoriesTable();
+      if (tabId === 'udhaar') loadUdhaarData();
     }
 
     function toggleTheme() {
@@ -482,10 +564,14 @@
         return;
       }
       products.forEach(p => {
+        const thumbHtml = p.image_url 
+          ? `<img src="${p.image_url}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 6px;">`
+          : `<div class="product-thumb" style="height: 100px; display: flex; align-items: center; justify-content: center; font-size: 13px;">[ ${p.category_name} ]</div>`;
+
         grid.innerHTML += `
           <div class="product-card">
-            <div class="product-thumb">[ ${p.category_name} ]</div>
-            <div class="product-name">${p.name}</div>
+            ${thumbHtml}
+            <div class="product-name" style="margin-top: 6px;">${p.name}</div>
             <div class="product-price">PKR ${p.selling_price.toFixed(2)}</div>
             <div class="product-stock">Stock: ${p.stock_quantity}</div>
             <button class="btn btn-success" style="margin-top: 4px;" onclick='addHardwareToCart(${JSON.stringify(p)})'>Add to Invoice</button>
@@ -597,8 +683,13 @@
       const tbody = document.getElementById('productsTbody');
       tbody.innerHTML = '';
       products.forEach(p => {
+        const imgCell = p.image_url 
+          ? `<img src="${p.image_url}" style="width: 44px; height: 44px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color);">`
+          : `<div style="width: 44px; height: 44px; border-radius: 6px; background: var(--bg-color); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--text-sub);">No Img</div>`;
+
         tbody.innerHTML += `
           <tr>
+            <td>${imgCell}</td>
             <td>${p.id.substring(0, 8)}</td>
             <td>${p.name}</td>
             <td>${p.category_name}</td>
@@ -648,11 +739,39 @@
       }
     }
 
+    function handleImageFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const base64 = evt.target.result;
+        document.getElementById('pImageData').value = base64;
+        document.getElementById('pImagePreview').src = base64;
+        document.getElementById('imagePreviewBox').style.display = 'block';
+        document.getElementById('btnClearImg').style.display = 'inline-block';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearProductImage() {
+      document.getElementById('pImageData').value = '';
+      document.getElementById('pImageFile').value = '';
+      document.getElementById('pImagePreview').src = '';
+      document.getElementById('imagePreviewBox').style.display = 'none';
+      document.getElementById('btnClearImg').style.display = 'none';
+    }
+
     async function openAddProductModal() {
       const cats = await window.pywebview.api.get_categories();
       const select = document.getElementById('pCat');
       select.innerHTML = '';
       cats.forEach(c => select.innerHTML += `<option>${c.name}</option>`);
+      clearProductImage();
+      document.getElementById('pName').value = '';
+      document.getElementById('pBarcode').value = '';
+      document.getElementById('pCost').value = '';
+      document.getElementById('pPrice').value = '';
+      document.getElementById('pStock').value = '';
       document.getElementById('addProductModal').classList.add('active');
     }
 
@@ -669,10 +788,13 @@
         barcode: document.getElementById('pBarcode').value,
         cost_price: parseFloat(document.getElementById('pCost').value) || 0,
         selling_price: parseFloat(document.getElementById('pPrice').value) || 0,
-        stock_quantity: parseInt(document.getElementById('pStock').value) || 0
+        stock_quantity: parseInt(document.getElementById('pStock').value) || 0,
+        image_url: document.getElementById('pImageData').value || ''
       });
       closeAddProductModal();
       loadProductsTable();
+      loadProductCards();
+      loadDashboard();
     }
 
     async function searchReturnInvoice() {
@@ -712,6 +834,108 @@
 
     function handleSearch(v) {
       loadProductCards();
+    }
+
+    // --- UDHAAR LEDGER JAVASCRIPT ---
+    let allUdhaarRecords = [];
+
+    async function loadUdhaarData() {
+      if (!window.pywebview) return;
+      const summary = await window.pywebview.api.get_udhaar_summary();
+      document.getElementById('valCustomerUdhaar').innerText = 'PKR ' + summary.customer_due.toFixed(2);
+      document.getElementById('valSupplierUdhaar').innerText = 'PKR ' + summary.supplier_due.toFixed(2);
+      document.getElementById('valUdhaarCount').innerText = summary.total_records;
+
+      allUdhaarRecords = await window.pywebview.api.get_all_udhaar_records();
+      renderUdhaarTable(allUdhaarRecords);
+    }
+
+    function renderUdhaarTable(records) {
+      const tbody = document.getElementById('udhaarTbody');
+      tbody.innerHTML = '';
+      if (!records || records.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-sub); padding: 30px;">No Udhaar / Khata records found.</td></tr>';
+        return;
+      }
+      records.forEach(r => {
+        const isGiven = (r.type === 'Given' || r.type === 'Payable');
+        const badgeColor = isGiven ? 'var(--accent-red)' : 'var(--accent-green)';
+        const typeBadge = `<span style="padding: 3px 8px; border-radius: 4px; font-weight: 600; font-size: 11px; background: rgba(255,255,255,0.06); color: ${badgeColor}; border: 1px solid ${badgeColor};">${r.type}</span>`;
+        const dt = (r.created_at || '').substring(0, 16).replace('T', ' ');
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${dt}</td>
+            <td style="font-weight: 600; color: var(--text-main);">${r.party_name}</td>
+            <td>${r.party_type}</td>
+            <td>${typeBadge}</td>
+            <td style="font-weight: 700; color: ${badgeColor};">PKR ${parseFloat(r.amount).toFixed(2)}</td>
+            <td style="color: var(--text-sub); font-size: 12px;">${r.notes || '-'}</td>
+            <td><button class="btn btn-danger" style="padding: 4px 8px; font-size: 11px;" onclick="deleteUdhaarRecord('${r.id}')">Delete</button></td>
+          </tr>
+        `;
+      });
+    }
+
+    function filterUdhaarTable() {
+      const q = (document.getElementById('udhaarSearchInput').value || '').toLowerCase().trim();
+      const fType = document.getElementById('udhaarFilterType').value;
+      const filtered = allUdhaarRecords.filter(r => {
+        const matchText = (r.party_name || '').toLowerCase().includes(q) || (r.notes || '').toLowerCase().includes(q);
+        const matchType = (fType === 'All' || r.party_type === fType);
+        return matchText && matchType;
+      });
+      renderUdhaarTable(filtered);
+    }
+
+    function openAddUdhaarModal() {
+      document.getElementById('uPartyName').value = '';
+      document.getElementById('uAmount').value = '';
+      document.getElementById('uNotes').value = '';
+      updateUdhaarEntryTypeOptions();
+      document.getElementById('addUdhaarModal').classList.add('active');
+    }
+
+    function closeAddUdhaarModal() {
+      document.getElementById('addUdhaarModal').classList.remove('active');
+    }
+
+    function updateUdhaarEntryTypeOptions() {
+      const pType = document.getElementById('uPartyType').value;
+      const eSelect = document.getElementById('uEntryType');
+      if (pType === 'Customer') {
+        eSelect.innerHTML = `
+          <option value="Given">Given / Baki (Customer ko Udhaar Diya)</option>
+          <option value="Received">Received / Wasooli (Customer se Paise Mile)</option>
+        `;
+      } else {
+        eSelect.innerHTML = `
+          <option value="Payable">Payable (Supplier ka Udhaar Dena Hai)</option>
+          <option value="Paid">Paid (Supplier ko Payment Ada Kar Di)</option>
+        `;
+      }
+    }
+
+    async function saveUdhaarRecord() {
+      const name = document.getElementById('uPartyName').value.trim();
+      const amt = parseFloat(document.getElementById('uAmount').value) || 0;
+      if (!name) return alert("Party/Person Name is required");
+      if (amt <= 0) return alert("Amount must be greater than 0");
+
+      const pType = document.getElementById('uPartyType').value;
+      const eType = document.getElementById('uEntryType').value;
+      const notes = document.getElementById('uNotes').value.trim();
+
+      await window.pywebview.api.add_udhaar_record(name, pType, amt, eType, notes);
+      closeAddUdhaarModal();
+      loadUdhaarData();
+    }
+
+    async function deleteUdhaarRecord(id) {
+      if (confirm("Delete this khata entry?")) {
+        await window.pywebview.api.delete_udhaar_record(id);
+        loadUdhaarData();
+      }
     }
 
     function openSettingsModal() {

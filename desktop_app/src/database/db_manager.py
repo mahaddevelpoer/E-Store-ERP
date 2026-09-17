@@ -511,3 +511,61 @@ class LocalDatabaseManager:
             cursor = conn.cursor()
             cursor.execute("UPDATE sync_queue SET status = 'synced' WHERE id = ?", (item_id,))
             conn.commit()
+
+    # --- UDHAAR / CREDIT LEDGER CRUD ---
+    def get_all_udhaar_records(self) -> List[Dict[str, Any]]:
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS udhaar_ledger (
+                    id TEXT PRIMARY KEY,
+                    party_name TEXT NOT NULL,
+                    party_type TEXT NOT NULL,
+                    amount REAL NOT NULL,
+                    type TEXT NOT NULL,
+                    notes TEXT,
+                    created_at TEXT NOT NULL
+                )
+            """)
+            cursor.execute("SELECT * FROM udhaar_ledger ORDER BY created_at DESC")
+            return [dict(row) for row in cursor.fetchall()]
+
+    def add_udhaar_record(self, party_name: str, party_type: str, amount: float, entry_type: str, notes: str = "") -> str:
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            rec_id = str(uuid.uuid4())
+            now = datetime.datetime.now().isoformat()
+            cursor.execute("""
+                INSERT INTO udhaar_ledger (id, party_name, party_type, amount, type, notes, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (rec_id, party_name.strip(), party_type.strip(), float(amount), entry_type.strip(), notes.strip(), now))
+            conn.commit()
+            return rec_id
+
+    def delete_udhaar_record(self, record_id: str):
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM udhaar_ledger WHERE id = ?", (record_id,))
+            conn.commit()
+
+    def get_udhaar_summary(self) -> Dict[str, Any]:
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM udhaar_ledger")
+            rows = [dict(r) for r in cursor.fetchall()]
+            
+            # Net customer udhaar = (Customer Given/Payable - Customer Received)
+            customer_given = sum(r['amount'] for r in rows if r['party_type'] == 'Customer' and r['type'] == 'Given')
+            customer_received = sum(r['amount'] for r in rows if r['party_type'] == 'Customer' and r['type'] == 'Received')
+            net_customer_due = max(0.0, customer_given - customer_received)
+
+            supplier_payable = sum(r['amount'] for r in rows if r['party_type'] == 'Supplier' and r['type'] == 'Payable')
+            supplier_paid = sum(r['amount'] for r in rows if r['party_type'] == 'Supplier' and r['type'] == 'Paid')
+            net_supplier_due = max(0.0, supplier_payable - supplier_paid)
+
+            return {
+                "customer_due": net_customer_due,
+                "supplier_due": net_supplier_due,
+                "total_records": len(rows)
+            }
+
