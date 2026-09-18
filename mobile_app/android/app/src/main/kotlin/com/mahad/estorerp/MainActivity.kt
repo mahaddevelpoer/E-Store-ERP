@@ -1,4 +1,4 @@
-package com.example.electronics_inventory_mobile
+package com.mahad.estorerp
 
 import io.flutter.embedding.android.FlutterActivity
 
