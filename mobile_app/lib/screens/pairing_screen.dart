@@ -6,7 +6,7 @@ import 'dashboard_screen.dart';
 class PairingScreen extends StatefulWidget {
   const PairingScreen({Key? key}) : super(key: key);
 
-  @override:
+  @override
   State<PairingScreen> createState() => _PairingScreenState();
 }
 
