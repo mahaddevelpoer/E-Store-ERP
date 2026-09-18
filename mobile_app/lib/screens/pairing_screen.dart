@@ -30,18 +30,18 @@ class _PairingScreenState extends State<PairingScreen> {
     });
 
     final token = await _fcmService.getFCMToken() ?? "sample_fcm_token_dev";
-    final success = await _pairingService.verifyPairingCode(code, token, "Owner Phone");
+    final result = await _pairingService.verifyPairingCode(code, token, "Owner Phone");
 
     setState(() => _isLoading = false);
 
-    if (success) {
+    if (result['success'] == true) {
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const DashboardScreen()),
       );
     } else {
-      setState(() => _errorMessage = "Invalid or expired 6-digit code. Check Desktop POS screen.");
+      setState(() => _errorMessage = result['message'] ?? "Invalid or expired 6-digit code.");
     }
   }
 
