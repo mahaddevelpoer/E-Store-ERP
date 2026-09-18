@@ -39,13 +39,13 @@
     body { background-color: var(--bg-color); color: var(--text-main); height: 100vh; width: 100vw; display: flex; flex-direction: column; overflow: hidden; }
 
     /* Top Workspace (Sidebar + Main Area) */
-    .app-workspace { flex: 1; display: flex; width: 100%; height: calc(100vh - 28px); overflow: hidden; }
+    .app-workspace { flex: 1; display: flex; width: 100%; height: calc(100vh - 32px); overflow: hidden; }
 
-    /* Left Navigation Rail (Sidebar) - Classic + Advanced Fluent */
+    /* Left Navigation Rail (Sidebar) */
     .sidebar { width: 250px; min-width: 250px; max-width: 250px; flex-shrink: 0; background-color: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 16px 12px; height: 100%; z-index: 10; }
     .brand-box { padding: 12px 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-color); }
     .brand-icon { width: 34px; height: 34px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; color: white; box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3); }
-    .brand-title { font-size: 17px; font-weight: 700; color: var(--text-main); letter-spacing: 0.3px; }
+    .brand-title { font-size: 16px; font-weight: 700; color: var(--text-main); letter-spacing: 0.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     
     .nav-list { display: flex; flex-direction: column; gap: 6px; flex: 1; overflow-y: auto; }
     .nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 8px; cursor: pointer; color: var(--text-sub); font-weight: 600; font-size: 13px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid transparent; user-select: none; }
@@ -55,12 +55,12 @@
 
     /* Main Content Area */
     .main-area { flex: 1; display: flex; flex-direction: column; height: 100%; min-width: 0; overflow: hidden; background: var(--bg-color); }
-    .header-bar { height: 60px; min-height: 60px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background-color: var(--card-bg); }
-    .search-input { width: 340px; padding: 9px 14px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); outline: none; font-size: 13px; transition: border-color 0.2s; }
+    .header-bar { height: 60px; min-height: 60px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background-color: var(--card-bg); gap: 12px; flex-wrap: nowrap; }
+    .search-input { width: 100%; min-width: 0; padding: 9px 14px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); outline: none; font-size: 13px; transition: border-color 0.2s; box-sizing: border-box; }
     .search-input:focus { border-color: var(--accent-blue); }
-    .header-actions { display: flex; gap: 10px; align-items: center; }
+    .header-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
 
-    .btn { padding: 8px 16px; border-radius: 7px; border: 1px solid transparent; font-weight: 600; cursor: pointer; font-size: 13px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn { padding: 8px 16px; border-radius: 7px; border: 1px solid transparent; font-weight: 600; cursor: pointer; font-size: 13px; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; flex-shrink: 0; }
     .btn-primary { background-color: var(--accent-blue); color: white; }
     .btn-success { background-color: var(--accent-green); color: white; }
     .btn-danger { background-color: var(--accent-red); color: white; }
@@ -68,67 +68,68 @@
     .btn:hover { opacity: 0.92; transform: translateY(-1px); }
     .btn:active { transform: translateY(0); }
 
-    /* Bottom Full Window Indicator Line & Status Bar */
+    /* Bottom Status Bar */
     .bottom-status-line { 
       height: 32px; 
       min-height: 32px; 
       width: 100%; 
       background: var(--sidebar-bg); 
-      border-top: 3px solid #ffffff; /* Bright solid white separator line across full width */
+      border-top: 2px solid var(--border-color);
       display: flex; 
       align-items: center; 
       justify-content: space-between; 
-      padding: 0 18px; 
+      padding: 0 16px; 
       font-size: 12px; 
-      font-weight: 700; 
+      font-weight: 600; 
       color: var(--text-main); 
       z-index: 1000; 
       user-select: none; 
-      box-shadow: 0 -3px 12px rgba(255, 255, 255, 0.1); 
     }
-    .status-left, .status-right { display: flex; align-items: center; gap: 14px; }
-    .status-indicator-dot { width: 9px; height: 9px; border-radius: 50%; background-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); display: inline-block; }
-    .status-badge { background: rgba(2, 132, 199, 0.2); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.5); border-radius: 4px; padding: 2px 10px; font-size: 11.5px; }
+    .status-left, .status-right { display: flex; align-items: center; gap: 12px; overflow: hidden; }
+    .status-indicator-dot { width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); display: inline-block; flex-shrink: 0; }
+    .status-badge { background: rgba(2, 132, 199, 0.2); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.5); border-radius: 4px; padding: 2px 8px; font-size: 11px; white-space: nowrap; }
 
-    .content-body { flex: 1; padding: 24px; overflow-y: auto; display: none; }
+    .content-body { flex: 1; padding: 20px; overflow-y: auto; overflow-x: hidden; display: none; }
     .content-body.active { display: block !important; }
 
     /* Overview Dashboard Metrics Grid */
-    .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-    .metric-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; }
-    .metric-title { font-size: 12px; color: var(--text-sub); margin-bottom: 6px; }
-    .metric-val { font-size: 22px; font-weight: 700; color: var(--text-main); }
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .metric-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; min-width: 0; }
+    .metric-title { font-size: 12px; color: var(--text-sub); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .metric-val { font-size: 20px; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     /* Category Filter Pills */
     .pills-bar { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
-    .pill { padding: 6px 14px; border-radius: 20px; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-sub); font-size: 12px; font-weight: 600; cursor: pointer; }
+    .pill { padding: 6px 14px; border-radius: 20px; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-sub); font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
     .pill.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
 
     /* Product Cards Grid */
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
-    .product-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 8px; transition: transform 0.2s, border 0.2s; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+    .product-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 6px; transition: transform 0.2s, border 0.2s; min-width: 0; }
     .product-card:hover { border-color: var(--accent-cyan); transform: translateY(-2px); }
-    .product-thumb { height: 90px; background-color: var(--bg-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--accent-cyan); }
-    .product-name { font-size: 14px; font-weight: 600; color: var(--text-main); height: 38px; overflow: hidden; }
+    .product-thumb { height: 90px; background-color: var(--bg-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--accent-cyan); overflow: hidden; }
+    .product-name { font-size: 13.5px; font-weight: 600; color: var(--text-main); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; word-break: break-word; min-height: 36px; max-height: 36px; line-height: 1.3; }
     .product-price { font-size: 15px; font-weight: 700; color: var(--accent-cyan); }
     .product-stock { font-size: 11px; color: var(--text-sub); }
 
-    /* USB Media Copying Service Bar */
-    .media-bar { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; margin-top: 24px; display: flex; gap: 12px; align-items: center; }
+    /* Media bar & Cart drawer */
+    .media-bar { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; margin-top: 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .cart-summary-bar { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px 20px; margin-top: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
 
-    /* Floating Cart Drawer / Bar */
-    .cart-summary-bar { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px 24px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
-
-    /* Windows 11 Fluent Modal Window */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 999; }
+    /* Windows 11 Fluent Adaptive Modal Windows */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
     .modal-overlay.active { display: flex; }
-    .modal-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; width: 620px; max-height: 85vh; display: flex; flex-direction: column; padding: 24px; gap: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
+    .modal-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; width: 100%; max-width: 520px; max-height: 88vh; display: flex; flex-direction: column; padding: 20px 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); box-sizing: border-box; overflow: hidden; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; flex-shrink: 0; }
+    .modal-body { flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 12px 4px 12px 0; }
+    .modal-footer { flex-shrink: 0; display: flex; justify-content: flex-end; gap: 10px; padding-top: 12px; border-top: 1px solid var(--border-color); margin-top: auto; }
 
-    /* Tables */
-    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-    th { background: var(--bg-color); color: var(--accent-cyan); text-align: left; padding: 12px; font-size: 12px; border-bottom: 1px solid var(--border-color); }
-    td { padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-main); }
+    /* Tables & Responsive Containers */
+    .table-container { width: 100%; overflow-x: auto; margin-top: 12px; border-radius: 8px; border: 1px solid var(--border-color); }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: var(--sidebar-bg); color: var(--accent-cyan); text-align: left; padding: 11px 14px; font-size: 12px; font-weight: 700; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+    td { padding: 11px 14px; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-main); max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    tr:hover td { background-color: rgba(255,255,255,0.02); }
   </style>
 </head>
 <body>
@@ -138,7 +139,7 @@
     <div class="sidebar">
       <div class="brand-box">
         <div class="brand-icon">E</div>
-        <div>
+        <div style="overflow: hidden;">
           <div class="brand-title">E-Store POS</div>
           <div style="font-size: 10px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px;">Business Edition</div>
         </div>
@@ -173,333 +174,360 @@
 
     <!-- Main Content Body -->
     <div class="main-area">
-    <div class="header-bar">
-      <input type="text" class="search-input" id="globalSearch" placeholder="Search products, barcodes..." oninput="handleSearch(this.value)">
-      <div class="header-actions">
-        <button class="btn btn-secondary" onclick="toggleTheme()">Theme: <span id="themeLabel">Dark</span></button>
-        <button class="btn btn-secondary" onclick="openPairingModal()">Pair Mobile</button>
-        <button class="btn btn-primary" onclick="openSettingsModal()">Preferences</button>
+      <div class="header-bar">
+        <div style="flex: 1; max-width: 400px;">
+          <input type="text" class="search-input" id="globalSearch" placeholder="Search products, barcodes..." oninput="handleSearch(this.value)">
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary" onclick="toggleTheme()">Theme: <span id="themeLabel">Dark</span></button>
+          <button class="btn btn-secondary" onclick="openPairingModal()">Pair Mobile</button>
+          <button class="btn btn-primary" onclick="openSettingsModal()">Preferences</button>
+        </div>
+      </div>
+
+      <!-- 1. OVERVIEW DASHBOARD -->
+      <div class="content-body active" id="tab-dashboard">
+        <h2 style="margin-bottom: 16px;">Business Overview & Financial Capital</h2>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-title">Total Capital Invested (Stock Cost)</div>
+            <div class="metric-val" id="valCapital">PKR 0.00</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">Total Stock Valuation</div>
+            <div class="metric-val" id="valStock">PKR 0.00</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">Gross Business Revenue</div>
+            <div class="metric-val" id="valGrossRev">PKR 0.00</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">Net Business Profit</div>
+            <div class="metric-val" style="color: var(--accent-green);" id="valProfit">PKR 0.00</div>
+          </div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-title">Hardware Sales Revenue</div>
+            <div class="metric-val" id="valHwRev">PKR 0.00</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">USB Media Copying Income</div>
+            <div class="metric-val" id="valMediaRev">PKR 0.00</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">Total Products in Stock</div>
+            <div class="metric-val" id="valProductsCount">0</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">Low Stock Alert Count</div>
+            <div class="metric-val" style="color: var(--accent-red);" id="valLowStock">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. POS STORE TAB -->
+      <div class="content-body" id="tab-pos">
+        <div class="pills-bar" id="categoryPills"></div>
+        <div class="products-grid" id="productsGrid"></div>
+
+        <div class="media-bar">
+          <strong style="white-space: nowrap;">USB Movie/Song Download:</strong>
+          <select class="search-input" id="mediaType" style="width: auto;">
+            <option>HD Movie Copy</option>
+            <option>Songs MP3 Batch</option>
+            <option>Software Download</option>
+            <option>Custom USB Transfer</option>
+          </select>
+          <label style="white-space: nowrap;">Qty:</label>
+          <input type="number" class="search-input" id="mediaQty" value="1" style="width: 70px;">
+          <label style="white-space: nowrap;">Price (PKR):</label>
+          <input type="number" class="search-input" id="mediaPrice" value="150" style="width: 100px;">
+          <button class="btn btn-success" onclick="addMediaServiceToCart()">Add Media Service</button>
+        </div>
+
+        <div class="cart-summary-bar">
+          <div>
+            <span style="font-size: 14px; color: var(--text-sub);">Invoice Cart:</span>
+            <strong id="cartItemCount" style="margin-left: 8px; font-size: 16px;">0 items</strong>
+          </div>
+          <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+            <span style="font-size: 18px; font-weight: bold;" id="cartTotalDisplay">Total: PKR 0.00</span>
+            <button class="btn btn-success" style="padding: 10px 20px; font-size: 14px;" onclick="openCheckoutModal()">Proceed to Billing</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. SALES RETURNS TAB -->
+      <div class="content-body" id="tab-returns">
+        <h2>Sales Returns & Item Refunds</h2>
+        <div style="display: flex; gap: 10px; margin-top: 14px; max-width: 500px;">
+          <input type="text" class="search-input" id="returnReceiptInput" placeholder="Enter Invoice Receipt Number...">
+          <button class="btn btn-primary" onclick="searchReturnInvoice()">Search</button>
+        </div>
+        <div id="returnStatus" style="margin-top: 12px; color: var(--text-sub); font-weight: 600;"></div>
+        <div class="table-container">
+          <table id="returnTable">
+            <thead>
+              <tr>
+                <th>Item Name</th><th>Type</th><th>Qty Purchased</th><th>Unit Price</th><th>Total</th><th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="returnTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 4. HARDWARE PRODUCTS MANAGER TAB -->
+      <div class="content-body" id="tab-products">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <h2>Hardware Accessories Manager</h2>
+          <button class="btn btn-success" onclick="openAddProductModal()">+ Add New Product</button>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 60px;">Image</th>
+                <th style="width: 90px;">ID</th>
+                <th>Item Name</th>
+                <th>Category</th>
+                <th>Cost Price</th>
+                <th>Selling Price</th>
+                <th>Stock</th>
+                <th style="width: 80px;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="productsTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 5. CATEGORY MANAGER TAB -->
+      <div class="content-body" id="tab-categories">
+        <h2>Custom Category Manager</h2>
+        <div style="display: flex; gap: 10px; margin: 14px 0; max-width: 440px;">
+          <input type="text" class="search-input" id="newCatInput" placeholder="Enter category name...">
+          <button class="btn btn-success" onclick="addCategory()">Add Category</button>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th style="width: 100px;">ID</th><th>Category Name</th><th style="width: 80px;">Action</th></tr>
+            </thead>
+            <tbody id="categoriesTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 6. UDHAAR LEDGER TAB -->
+      <div class="content-body" id="tab-udhaar">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <h2>Udhaar / Credit Ledger (Customer & Supplier Khata)</h2>
+          <button class="btn btn-success" onclick="openAddUdhaarModal()">+ Add Udhaar Entry</button>
+        </div>
+
+        <div class="metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 16px;">
+          <div class="metric-card">
+            <div class="metric-title">Total Customer Udhaar Due (Wasool Karna Hai)</div>
+            <div class="metric-val" style="color: var(--accent-red);" id="valCustomerUdhaar">PKR 0.00</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">Supplier Udhaar Payable (Dena Hai)</div>
+            <div class="metric-val" style="color: var(--accent-cyan);" id="valSupplierUdhaar">PKR 0.00</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">Total Khata Records</div>
+            <div class="metric-val" id="valUdhaarCount">0</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
+          <input type="text" class="search-input" id="udhaarSearchInput" placeholder="Filter by person name or phone..." oninput="filterUdhaarTable()" style="flex: 1; min-width: 220px;">
+          <select class="search-input" id="udhaarFilterType" onchange="filterUdhaarTable()" style="width: 160px;">
+            <option value="All">All Parties</option>
+            <option value="Customer">Customer</option>
+            <option value="Supplier">Supplier</option>
+          </select>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 140px;">Date & Time</th>
+                <th>Party Name</th>
+                <th style="width: 100px;">Party Type</th>
+                <th style="width: 110px;">Entry Type</th>
+                <th>Amount (PKR)</th>
+                <th>Notes / Phone</th>
+                <th style="width: 80px;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="udhaarTbody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
-
-    <!-- 1. OVERVIEW DASHBOARD -->
-    <div class="content-body active" id="tab-dashboard">
-      <h2 style="margin-bottom: 16px;">Business Overview & Financial Capital</h2>
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-title">Total Capital Invested (Stock Cost)</div>
-          <div class="metric-val" id="valCapital">PKR 0.00</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-title">Total Stock Valuation</div>
-          <div class="metric-val" id="valStock">PKR 0.00</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-title">Gross Business Revenue</div>
-          <div class="metric-val" id="valGrossRev">PKR 0.00</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-title">Net Business Profit</div>
-          <div class="metric-val" style="color: var(--accent-green);" id="valProfit">PKR 0.00</div>
-        </div>
-      </div>
-
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-title">Hardware Sales Revenue</div>
-          <div class="metric-val" id="valHwRev">PKR 0.00</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-title">USB Media Copying Income</div>
-          <div class="metric-val" id="valMediaRev">PKR 0.00</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-title">Total Products in Stock</div>
-          <div class="metric-val" id="valProductsCount">0</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-title">Low Stock Alert Count</div>
-          <div class="metric-val" style="color: var(--accent-red);" id="valLowStock">0</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2. POS STORE TAB -->
-    <div class="content-body" id="tab-pos">
-      <div class="pills-bar" id="categoryPills">
-        <!-- Dynamic Pills -->
-      </div>
-
-      <div class="products-grid" id="productsGrid">
-        <!-- Dynamic Cards -->
-      </div>
-
-      <div class="media-bar">
-        <strong style="white-space: nowrap;">USB Movie/Song Download:</strong>
-        <select class="search-input" id="mediaType" style="width: auto;">
-          <option>HD Movie Copy</option>
-          <option>Songs MP3 Batch</option>
-          <option>Software Download</option>
-          <option>Custom USB Transfer</option>
-        </select>
-        <label>Qty:</label>
-        <input type="number" class="search-input" id="mediaQty" value="1" style="width: 70px;">
-        <label>Custom Price (PKR):</label>
-        <input type="number" class="search-input" id="mediaPrice" value="150" style="width: 110px;">
-        <button class="btn btn-success" onclick="addMediaServiceToCart()">Add Media Service</button>
-      </div>
-
-      <div class="cart-summary-bar">
-        <div>
-          <span style="font-size: 14px; color: var(--text-sub);">Invoice Cart:</span>
-          <strong id="cartItemCount" style="margin-left: 8px; font-size: 16px;">0 items</strong>
-        </div>
-        <div style="display: flex; gap: 16px; align-items: center;">
-          <span style="font-size: 18px; font-weight: bold;" id="cartTotalDisplay">Total: PKR 0.00</span>
-          <button class="btn btn-success" style="padding: 12px 24px; font-size: 15px;" onclick="openCheckoutModal()">Proceed to Payment & Billing</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. SALES RETURNS TAB -->
-    <div class="content-body" id="tab-returns">
-      <h2>Sales Returns & Item Refunds</h2>
-      <div style="display: flex; gap: 10px; margin-top: 16px;">
-        <input type="text" class="search-input" id="returnReceiptInput" placeholder="Enter Invoice Receipt Number (INV-XXXXXXXX...)" style="width: 380px;">
-        <button class="btn btn-primary" onclick="searchReturnInvoice()">Search Invoice</button>
-      </div>
-      <div id="returnStatus" style="margin-top: 12px; color: var(--text-sub);"></div>
-      <table id="returnTable">
-        <thead>
-          <tr>
-            <th>Item Name</th><th>Type</th><th>Qty Purchased</th><th>Unit Price</th><th>Total</th><th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="returnTbody"></tbody>
-      </table>
-    </div>
-
-    <!-- 4. HARDWARE PRODUCTS MANAGER TAB -->
-    <div class="content-body" id="tab-products">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h2>Hardware Accessories Manager</h2>
-        <button class="btn btn-success" onclick="openAddProductModal()">+ Add New Product</button>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Image</th><th>ID</th><th>Item Name</th><th>Category</th><th>Cost Price</th><th>Selling Price</th><th>Stock</th><th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="productsTbody"></tbody>
-      </table>
-    </div>
-
-    <!-- 5. CATEGORY MANAGER TAB -->
-    <div class="content-body" id="tab-categories">
-      <h2>Custom Category Manager</h2>
-      <div style="display: flex; gap: 10px; margin: 16px 0;">
-        <input type="text" class="search-input" id="newCatInput" placeholder="Enter category name...">
-        <button class="btn btn-success" onclick="addCategory()">Add Category</button>
-      </div>
-      <table>
-        <thead>
-          <tr><th>ID</th><th>Category Name</th><th>Action</th></tr>
-        </thead>
-        <tbody id="categoriesTbody"></tbody>
-      </table>
-    </div>
-
-    <!-- 6. UDHAAR LEDGER TAB -->
-    <div class="content-body" id="tab-udhaar">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h2>Udhaar / Credit Ledger (Customer & Supplier Khata)</h2>
-        <button class="btn btn-success" onclick="openAddUdhaarModal()">+ Add Udhaar Entry</button>
-      </div>
-
-      <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;">
-        <div class="metric-card">
-          <div class="metric-title">Total Customer Udhaar Due (Wasool Karna Hai)</div>
-          <div class="metric-val" style="color: var(--accent-red);" id="valCustomerUdhaar">PKR 0.00</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-title">Supplier Udhaar Payable (Dena Hai)</div>
-          <div class="metric-val" style="color: var(--accent-cyan);" id="valSupplierUdhaar">PKR 0.00</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-title">Total Khata Records</div>
-          <div class="metric-val" id="valUdhaarCount">0</div>
-        </div>
-      </div>
-
-      <div style="display: flex; gap: 12px; margin-bottom: 14px;">
-        <input type="text" class="search-input" id="udhaarSearchInput" placeholder="Filter by person name or phone..." oninput="filterUdhaarTable()" style="flex: 1;">
-        <select class="search-input" id="udhaarFilterType" onchange="filterUdhaarTable()" style="width: 180px;">
-          <option value="All">All Parties</option>
-          <option value="Customer">Customer</option>
-          <option value="Supplier">Supplier</option>
-        </select>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Date & Time</th>
-            <th>Party Name</th>
-            <th>Party Type</th>
-            <th>Entry Type</th>
-            <th>Amount (PKR)</th>
-            <th>Notes / Phone</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="udhaarTbody"></tbody>
-      </table>
-    </div>
-    </div><!-- End of main-area -->
   </div>
-  <!-- End of app-workspace -->
 
-  <!-- Bottom Full-Width Status Line & Maximized Window Indicator -->
+  <!-- Bottom Status Bar -->
   <div class="bottom-status-line">
     <div class="status-left">
       <span class="status-indicator-dot"></span>
       <span id="windowModeText">E-Store Desktop System: Online & Active</span>
-      <span class="status-badge" id="screenStateBadge">Standard Window</span>
+      <span class="status-badge" id="screenStateBadge">Standard View</span>
     </div>
     <div class="status-right">
-      <span id="dbStatus">SQLite Database: Connected</span>
+      <span id="dbStatus">Realtime Sync Active</span>
       <span>|</span>
       <span id="currentTimeDisplay">--:--</span>
     </div>
   </div>
+
+  <!-- CHECKOUT MODAL -->
   <div class="modal-overlay" id="checkoutModal">
-    <div class="modal-card">
+    <div class="modal-card" style="max-width: 600px;">
       <div class="modal-header">
         <h3>Invoice Checkout & Payment</h3>
         <button class="btn btn-secondary" onclick="closeCheckoutModal()">X</button>
       </div>
-      <div style="flex: 1; overflow-y: auto;">
-        <table>
-          <thead>
-            <tr><th>Item Name</th><th>Type</th><th>Qty</th><th>Price</th><th>Action</th></tr>
-          </thead>
-          <tbody id="checkoutCartTbody"></tbody>
-        </table>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 12px;">
-        <div style="display: flex; justify-content: space-between;">
+      <div class="modal-body">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Item</th><th>Type</th><th>Qty</th><th>Price</th><th>Action</th></tr>
+            </thead>
+            <tbody id="checkoutCartTbody"></tbody>
+          </table>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-weight: 600; margin-top: 6px;">
           <span>Subtotal:</span>
-          <strong id="modalSubtotal">PKR 0.00</strong>
+          <span id="modalSubtotal">PKR 0.00</span>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <span>Discount (PKR):</span>
-          <input type="number" class="search-input" id="modalDiscount" value="0" style="width: 100px;" oninput="recalcModalTotal()">
+          <input type="number" class="search-input" id="modalDiscount" value="0" style="width: 120px;" oninput="recalcModalTotal()">
         </div>
-        <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; color: var(--accent-green);">
-          <span>Final Payment Total:</span>
+        <div style="display: flex; justify-content: space-between; font-size: 17px; font-weight: bold; color: var(--accent-green);">
+          <span>Final Total:</span>
           <span id="modalFinalTotal">PKR 0.00</span>
         </div>
-        <button class="btn btn-success" style="width: 100%; padding: 14px; font-size: 16px;" onclick="completePOSCheckout()">Complete Sale & Print Receipt</button>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeCheckoutModal()">Cancel</button>
+        <button class="btn btn-success" onclick="completePOSCheckout()">Complete Sale & Print</button>
       </div>
     </div>
   </div>
 
   <!-- ADD PRODUCT MODAL -->
   <div class="modal-overlay" id="addProductModal">
-    <div class="modal-card" style="width: 440px;">
+    <div class="modal-card" style="max-width: 480px;">
       <div class="modal-header">
         <h3>Add New Hardware Accessory</h3>
         <button class="btn btn-secondary" onclick="closeAddProductModal()">X</button>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 12px;">
-        <input type="text" class="search-input" id="pName" placeholder="Product Name" style="width: 100%;">
-        <select class="search-input" id="pCat" style="width: 100%;"></select>
-        <input type="text" class="search-input" id="pBarcode" placeholder="Barcode / SKU" style="width: 100%;">
-        <input type="number" class="search-input" id="pCost" placeholder="Cost Price (PKR)" style="width: 100%;">
-        <input type="number" class="search-input" id="pPrice" placeholder="Selling Price (PKR)" style="width: 100%;">
-        <input type="number" class="search-input" id="pStock" placeholder="Stock Quantity" style="width: 100%;">
+      <div class="modal-body">
+        <input type="text" class="search-input" id="pName" placeholder="Product Name">
+        <select class="search-input" id="pCat"></select>
+        <input type="text" class="search-input" id="pBarcode" placeholder="Barcode / SKU">
+        <input type="number" class="search-input" id="pCost" placeholder="Cost Price (PKR)">
+        <input type="number" class="search-input" id="pPrice" placeholder="Selling Price (PKR)">
+        <input type="number" class="search-input" id="pStock" placeholder="Stock Quantity">
         <div style="display: flex; gap: 8px; align-items: center;">
           <input type="file" id="pImageFile" accept="image/*" style="display: none;" onchange="handleImageFileUpload(event)">
           <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="document.getElementById('pImageFile').click()">Choose Product Photo</button>
-          <button type="button" class="btn btn-danger" id="btnClearImg" style="display: none; padding: 8px 12px;" onclick="clearProductImage()">Remove Photo</button>
+          <button type="button" class="btn btn-danger" id="btnClearImg" style="display: none; padding: 8px 12px;" onclick="clearProductImage()">Remove</button>
         </div>
-        <div id="imagePreviewBox" style="display: none; text-align: center; background: var(--bg-color); border: 1px dashed var(--border-color); border-radius: 8px; padding: 10px;">
-          <img id="pImagePreview" src="" style="max-height: 100px; max-width: 100%; border-radius: 6px; object-fit: contain;">
+        <div id="imagePreviewBox" style="display: none; text-align: center; background: var(--bg-color); border: 1px dashed var(--border-color); border-radius: 8px; padding: 8px;">
+          <img id="pImagePreview" src="" style="max-height: 90px; max-width: 100%; border-radius: 6px; object-fit: contain;">
         </div>
         <input type="hidden" id="pImageData">
-        <button class="btn btn-success" style="padding: 12px; margin-top: 4px;" onclick="saveProduct()">Save Product</button>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeAddProductModal()">Cancel</button>
+        <button class="btn btn-success" onclick="saveProduct()">Save Product</button>
       </div>
     </div>
   </div>
 
   <!-- SETTINGS MODAL -->
   <div class="modal-overlay" id="settingsModal">
-    <div class="modal-card" style="width: 500px;">
+    <div class="modal-card" style="max-width: 520px;">
       <div class="modal-header">
         <h3>Preferences & Business Settings</h3>
         <button class="btn btn-secondary" onclick="closeSettingsModal()">X</button>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 12px; max-height: 70vh; overflow-y: auto;">
+      <div class="modal-body">
         <label style="font-size: 12px; font-weight: 600; color: var(--accent-cyan);">Store Details:</label>
-        <input type="text" class="search-input" id="sShopName" placeholder="Shop / Business Name" value="E-Store" style="width: 100%;">
-        <input type="text" class="search-input" id="sPhone" placeholder="Phone (+92 300 1234567)" style="width: 100%;">
-        <input type="text" class="search-input" id="sAddress" placeholder="Shop Address..." style="width: 100%;">
-        <input type="text" class="search-input" id="sReceiptFooter" placeholder="Receipt Footer Message" value="Thank you for shopping at E-Store!" style="width: 100%;">
+        <input type="text" class="search-input" id="sShopName" placeholder="Shop / Business Name" value="E-Store">
+        <input type="text" class="search-input" id="sPhone" placeholder="Phone (+92 300 1234567)">
+        <input type="text" class="search-input" id="sAddress" placeholder="Shop Address...">
+        <input type="text" class="search-input" id="sReceiptFooter" placeholder="Receipt Footer Message" value="Thank you for shopping at E-Store!">
 
-        <hr style="border: none; border-top: 1px solid var(--border-color); margin: 6px 0;">
+        <hr style="border: none; border-top: 1px solid var(--border-color); margin: 4px 0;">
 
         <label style="font-size: 12px; font-weight: 600; color: var(--accent-cyan);">Supabase Cloud Sync (Realtime & Mobile App):</label>
-        <p style="font-size: 11px; color: var(--text-sub);">Enter your Supabase Project URL and Anon/Service Key to sync sales to mobile:</p>
-        <input type="text" class="search-input" id="sSupabaseUrl" placeholder="https://xyzproject.supabase.co" style="width: 100%;">
-        <input type="password" class="search-input" id="sSupabaseKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." style="width: 100%;">
-
-        <button class="btn btn-primary" style="padding: 12px; margin-top: 8px;" onclick="saveSettings()">Save Preferences & Cloud Keys</button>
+        <p style="font-size: 11px; color: var(--text-sub);">Project URL & Anon Key for real-time mobile sync:</p>
+        <input type="text" class="search-input" id="sSupabaseUrl" placeholder="https://xyzproject.supabase.co">
+        <input type="password" class="search-input" id="sSupabaseKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6...">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeSettingsModal()">Close</button>
+        <button class="btn btn-primary" onclick="saveSettings()">Save Preferences</button>
       </div>
     </div>
   </div>
 
   <!-- PAIRING MODAL -->
   <div class="modal-overlay" id="pairingModal">
-    <div class="modal-card" style="width: 400px; text-align: center;">
+    <div class="modal-card" style="max-width: 420px; text-align: center;">
       <div class="modal-header">
         <h3>Mobile App Pairing</h3>
         <button class="btn btn-secondary" onclick="closePairingModal()">X</button>
       </div>
-      <div style="padding: 20px 0;">
+      <div class="modal-body" style="align-items: center; justify-content: center; padding: 20px 0;">
         <p style="color: var(--text-sub); font-size: 13px;">Enter this 6-digit OTP code in your E-Store mobile app to sync inventory:</p>
-        <div id="pairCodeDisplay" style="font-size: 38px; font-weight: 800; letter-spacing: 8px; color: var(--accent-cyan); margin: 20px 0; font-family: monospace;">------</div>
+        <div id="pairCodeDisplay" style="font-size: 40px; font-weight: 800; letter-spacing: 8px; color: var(--accent-cyan); margin: 16px 0; font-family: monospace;">------</div>
+        <div id="pairStatusText" style="font-size: 12px; color: var(--accent-green); margin-bottom: 8px;">Code valid for 30 minutes</div>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
         <button class="btn btn-primary" onclick="generateNewPairCode()">Generate New Code</button>
+        <button class="btn btn-secondary" onclick="closePairingModal()">Done</button>
       </div>
     </div>
   </div>
 
   <!-- ADD UDHAAR ENTRY MODAL -->
   <div class="modal-overlay" id="addUdhaarModal">
-    <div class="modal-card" style="width: 440px;">
+    <div class="modal-card" style="max-width: 480px;">
       <div class="modal-header">
         <h3>Add Udhaar / Khata Record</h3>
         <button class="btn btn-secondary" onclick="closeAddUdhaarModal()">X</button>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 12px;">
+      <div class="modal-body">
         <label style="font-size: 12px; font-weight: 600; color: var(--accent-cyan);">Party Type:</label>
-        <select class="search-input" id="uPartyType" style="width: 100%;" onchange="updateUdhaarEntryTypeOptions()">
+        <select class="search-input" id="uPartyType" onchange="updateUdhaarEntryTypeOptions()">
           <option value="Customer">Customer (Grahak)</option>
           <option value="Supplier">Supplier (Vendor)</option>
         </select>
 
-        <input type="text" class="search-input" id="uPartyName" placeholder="Person / Shop Name" style="width: 100%;">
+        <input type="text" class="search-input" id="uPartyName" placeholder="Person / Shop Name">
         
         <label style="font-size: 12px; font-weight: 600; color: var(--accent-cyan);">Transaction Type:</label>
-        <select class="search-input" id="uEntryType" style="width: 100%;">
+        <select class="search-input" id="uEntryType">
           <option value="Given">Given / Baki (Udhaar Diya)</option>
           <option value="Received">Received / Wasooli (Udhaar Wapas Aaya)</option>
         </select>
 
-        <input type="number" class="search-input" id="uAmount" placeholder="Amount in PKR" style="width: 100%;">
-        <input type="text" class="search-input" id="uNotes" placeholder="Phone number, items or remarks..." style="width: 100%;">
-
-        <button class="btn btn-success" style="padding: 12px; margin-top: 4px;" onclick="saveUdhaarRecord()">Save Khata Entry</button>
+        <input type="number" class="search-input" id="uAmount" placeholder="Amount in PKR">
+        <input type="text" class="search-input" id="uNotes" placeholder="Phone number, items or remarks...">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeAddUdhaarModal()">Cancel</button>
+        <button class="btn btn-success" onclick="saveUdhaarRecord()">Save Khata Entry</button>
       </div>
     </div>
   </div>
@@ -530,21 +558,21 @@
 
     // Window pywebview native bridge calls
     async function loadDashboard() {
-      if (window.pywebview) {
+      if (window.pywebview && window.pywebview.api) {
         const m = await window.pywebview.api.get_dashboard_metrics();
-        document.getElementById('valCapital').innerText = 'PKR ' + m.capital_invested.toFixed(2);
-        document.getElementById('valStock').innerText = 'PKR ' + m.stock_valuation.toFixed(2);
-        document.getElementById('valGrossRev').innerText = 'PKR ' + m.gross_revenue.toFixed(2);
-        document.getElementById('valProfit').innerText = 'PKR ' + m.net_profit.toFixed(2);
-        document.getElementById('valHwRev').innerText = 'PKR ' + m.total_hardware_revenue.toFixed(2);
-        document.getElementById('valMediaRev').innerText = 'PKR ' + m.total_media_revenue.toFixed(2);
-        document.getElementById('valProductsCount').innerText = m.total_products_count;
-        document.getElementById('valLowStock').innerText = m.low_stock_count;
+        document.getElementById('valCapital').innerText = 'PKR ' + (m.capital_invested || 0).toFixed(2);
+        document.getElementById('valStock').innerText = 'PKR ' + (m.stock_valuation || 0).toFixed(2);
+        document.getElementById('valGrossRev').innerText = 'PKR ' + (m.gross_revenue || 0).toFixed(2);
+        document.getElementById('valProfit').innerText = 'PKR ' + (m.net_profit || 0).toFixed(2);
+        document.getElementById('valHwRev').innerText = 'PKR ' + (m.total_hardware_revenue || 0).toFixed(2);
+        document.getElementById('valMediaRev').innerText = 'PKR ' + (m.total_media_revenue || 0).toFixed(2);
+        document.getElementById('valProductsCount').innerText = m.total_products_count || 0;
+        document.getElementById('valLowStock').innerText = m.low_stock_count || 0;
       }
     }
 
     async function loadPOSData() {
-      if (!window.pywebview) return;
+      if (!window.pywebview || !window.pywebview.api) return;
       const categories = await window.pywebview.api.get_categories();
       const pillsContainer = document.getElementById('categoryPills');
       pillsContainer.innerHTML = `<div class="pill ${activeCategory === 'All' ? 'active' : ''}" onclick="selectCategory('All')">All</div>`;
@@ -555,26 +583,27 @@
     }
 
     async function loadProductCards() {
+      if (!window.pywebview || !window.pywebview.api) return;
       const query = document.getElementById('globalSearch').value;
       const products = await window.pywebview.api.search_products(query, activeCategory);
       const grid = document.getElementById('productsGrid');
       grid.innerHTML = '';
-      if (products.length === 0) {
+      if (!products || products.length === 0) {
         grid.innerHTML = '<div style="color: var(--text-sub); grid-column: 1/-1; padding: 40px; text-align: center;">No products found in this category. Add new products in Hardware Products tab.</div>';
         return;
       }
       products.forEach(p => {
         const thumbHtml = p.image_url 
-          ? `<img src="${p.image_url}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 6px;">`
-          : `<div class="product-thumb" style="height: 100px; display: flex; align-items: center; justify-content: center; font-size: 13px;">[ ${p.category_name} ]</div>`;
+          ? `<img src="${p.image_url}" style="width: 100%; height: 90px; object-fit: cover; border-radius: 6px;">`
+          : `<div class="product-thumb" style="height: 90px; display: flex; align-items: center; justify-content: center; font-size: 12px;">[ ${p.category_name} ]</div>`;
 
         grid.innerHTML += `
           <div class="product-card">
             ${thumbHtml}
-            <div class="product-name" style="margin-top: 6px;">${p.name}</div>
+            <div class="product-name" title="${p.name}">${p.name}</div>
             <div class="product-price">PKR ${p.selling_price.toFixed(2)}</div>
             <div class="product-stock">Stock: ${p.stock_quantity}</div>
-            <button class="btn btn-success" style="margin-top: 4px;" onclick='addHardwareToCart(${JSON.stringify(p)})'>Add to Invoice</button>
+            <button class="btn btn-success" style="margin-top: 4px; padding: 6px 12px; font-size: 12px;" onclick='addHardwareToCart(${JSON.stringify(p)})'>+ Add to Invoice</button>
           </div>
         `;
       });
@@ -648,11 +677,11 @@
       cart.forEach((i, idx) => {
         tbody.innerHTML += `
           <tr>
-            <td>${i.name}</td>
+            <td title="${i.name}">${i.name}</td>
             <td>${i.item_type}</td>
             <td>${i.quantity}</td>
             <td>PKR ${i.selling_price.toFixed(2)}</td>
-            <td><button class="btn btn-danger" style="padding: 4px 8px; font-size: 11px;" onclick="removeCartItem(${idx})">Cancel</button></td>
+            <td><button class="btn btn-danger" style="padding: 3px 6px; font-size: 11px;" onclick="removeCartItem(${idx})">Remove</button></td>
           </tr>
         `;
       });
@@ -670,7 +699,7 @@
     async function completePOSCheckout() {
       const disc = parseFloat(document.getElementById('modalDiscount').value) || 0;
       const res = await window.pywebview.api.process_sale(cart, "Cash", disc);
-      alert(`Invoice #${res.receipt_number} Generated Successfully!\nTotal: PKR ${res.total_amount.toFixed(2)}\nPush notification sent to owner phone.`);
+      alert(`Invoice #${res.receipt_number} Completed!\nTotal: PKR ${res.total_amount.toFixed(2)}`);
       cart = [];
       updateCartSummary();
       closeCheckoutModal();
@@ -679,30 +708,36 @@
     }
 
     async function loadProductsTable() {
+      if (!window.pywebview || !window.pywebview.api) return;
       const products = await window.pywebview.api.get_all_products();
       const tbody = document.getElementById('productsTbody');
       tbody.innerHTML = '';
+      if (!products || products.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-sub); padding: 24px;">No products added yet.</td></tr>';
+        return;
+      }
       products.forEach(p => {
         const imgCell = p.image_url 
-          ? `<img src="${p.image_url}" style="width: 44px; height: 44px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color);">`
-          : `<div style="width: 44px; height: 44px; border-radius: 6px; background: var(--bg-color); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--text-sub);">No Img</div>`;
+          ? `<img src="${p.image_url}" style="width: 38px; height: 38px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color);">`
+          : `<div style="width: 38px; height: 38px; border-radius: 6px; background: var(--bg-color); display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--text-sub);">No Img</div>`;
 
         tbody.innerHTML += `
           <tr>
             <td>${imgCell}</td>
-            <td>${p.id.substring(0, 8)}</td>
-            <td>${p.name}</td>
+            <td>${(p.id || '').substring(0, 8)}</td>
+            <td title="${p.name}">${p.name}</td>
             <td>${p.category_name}</td>
             <td>PKR ${p.cost_price.toFixed(2)}</td>
             <td>PKR ${p.selling_price.toFixed(2)}</td>
             <td>${p.stock_quantity}</td>
-            <td><button class="btn btn-danger" style="padding: 4px 8px;" onclick="deleteProduct('${p.id}')">Delete</button></td>
+            <td><button class="btn btn-danger" style="padding: 3px 8px; font-size: 11px;" onclick="deleteProduct('${p.id}')">Delete</button></td>
           </tr>
         `;
       });
     }
 
     async function loadCategoriesTable() {
+      if (!window.pywebview || !window.pywebview.api) return;
       const cats = await window.pywebview.api.get_categories();
       const tbody = document.getElementById('categoriesTbody');
       tbody.innerHTML = '';
@@ -711,7 +746,7 @@
           <tr>
             <td>${c.id.substring(0, 8)}</td>
             <td>${c.name}</td>
-            <td><button class="btn btn-danger" style="padding: 4px 8px;" onclick="deleteCategory('${c.id}')">Delete</button></td>
+            <td><button class="btn btn-danger" style="padding: 3px 8px; font-size: 11px;" onclick="deleteCategory('${c.id}')">Delete</button></td>
           </tr>
         `;
       });
@@ -808,16 +843,16 @@
         statusDiv.innerText = `Invoice #${r} not found.`;
         return;
       }
-      statusDiv.innerText = `Invoice #${sale.receipt_number} | Date: ${sale.created_at.substring(0, 16)} | Total: PKR ${sale.total_amount.toFixed(2)}`;
+      statusDiv.innerText = `Invoice #${sale.receipt_number} | Total: PKR ${sale.total_amount.toFixed(2)}`;
       sale.items.forEach(i => {
         tbody.innerHTML += `
           <tr>
-            <td>${i.product_name}</td>
+            <td title="${i.product_name}">${i.product_name}</td>
             <td>${i.item_type}</td>
             <td>${i.quantity}</td>
             <td>PKR ${i.unit_price.toFixed(2)}</td>
             <td>PKR ${i.total_price.toFixed(2)}</td>
-            <td><button class="btn btn-danger" style="padding: 4px 8px;" onclick="processReturn('${sale.id}', '${i.id}', ${i.quantity})">Return Item</button></td>
+            <td><button class="btn btn-danger" style="padding: 3px 6px; font-size: 11px;" onclick="processReturn('${sale.id}', '${i.id}', ${i.quantity})">Return Item</button></td>
           </tr>
         `;
       });
@@ -840,11 +875,11 @@
     let allUdhaarRecords = [];
 
     async function loadUdhaarData() {
-      if (!window.pywebview) return;
+      if (!window.pywebview || !window.pywebview.api) return;
       const summary = await window.pywebview.api.get_udhaar_summary();
-      document.getElementById('valCustomerUdhaar').innerText = 'PKR ' + summary.customer_due.toFixed(2);
-      document.getElementById('valSupplierUdhaar').innerText = 'PKR ' + summary.supplier_due.toFixed(2);
-      document.getElementById('valUdhaarCount').innerText = summary.total_records;
+      document.getElementById('valCustomerUdhaar').innerText = 'PKR ' + (summary.customer_due || 0).toFixed(2);
+      document.getElementById('valSupplierUdhaar').innerText = 'PKR ' + (summary.supplier_due || 0).toFixed(2);
+      document.getElementById('valUdhaarCount').innerText = summary.total_records || 0;
 
       allUdhaarRecords = await window.pywebview.api.get_all_udhaar_records();
       renderUdhaarTable(allUdhaarRecords);
@@ -854,24 +889,24 @@
       const tbody = document.getElementById('udhaarTbody');
       tbody.innerHTML = '';
       if (!records || records.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-sub); padding: 30px;">No Udhaar / Khata records found.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-sub); padding: 30px;">No Khata records found.</td></tr>';
         return;
       }
       records.forEach(r => {
         const isGiven = (r.type === 'Given' || r.type === 'Payable');
         const badgeColor = isGiven ? 'var(--accent-red)' : 'var(--accent-green)';
-        const typeBadge = `<span style="padding: 3px 8px; border-radius: 4px; font-weight: 600; font-size: 11px; background: rgba(255,255,255,0.06); color: ${badgeColor}; border: 1px solid ${badgeColor};">${r.type}</span>`;
+        const typeBadge = `<span style="padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 11px; background: rgba(255,255,255,0.06); color: ${badgeColor}; border: 1px solid ${badgeColor};">${r.type}</span>`;
         const dt = (r.created_at || '').substring(0, 16).replace('T', ' ');
 
         tbody.innerHTML += `
           <tr>
             <td>${dt}</td>
-            <td style="font-weight: 600; color: var(--text-main);">${r.party_name}</td>
+            <td style="font-weight: 600; color: var(--text-main);" title="${r.party_name}">${r.party_name}</td>
             <td>${r.party_type}</td>
             <td>${typeBadge}</td>
             <td style="font-weight: 700; color: ${badgeColor};">PKR ${parseFloat(r.amount).toFixed(2)}</td>
-            <td style="color: var(--text-sub); font-size: 12px;">${r.notes || '-'}</td>
-            <td><button class="btn btn-danger" style="padding: 4px 8px; font-size: 11px;" onclick="deleteUdhaarRecord('${r.id}')">Delete</button></td>
+            <td style="color: var(--text-sub); font-size: 12px;" title="${r.notes || ''}">${r.notes || '-'}</td>
+            <td><button class="btn btn-danger" style="padding: 3px 6px; font-size: 11px;" onclick="deleteUdhaarRecord('${r.id}')">Delete</button></td>
           </tr>
         `;
       });
@@ -948,7 +983,7 @@
     }
 
     async function loadSettingsData() {
-      if (!window.pywebview) return;
+      if (!window.pywebview || !window.pywebview.api) return;
       const s = await window.pywebview.api.get_shop_settings();
       if (s) {
         document.getElementById('sShopName').value = s.shop_name || 'E-Store';
@@ -961,7 +996,7 @@
     }
 
     async function saveSettings() {
-      if (!window.pywebview) return;
+      if (!window.pywebview || !window.pywebview.api) return;
       const s = {
         shop_name: document.getElementById('sShopName').value.trim() || 'E-Store',
         phone: document.getElementById('sPhone').value.trim(),
@@ -988,7 +1023,8 @@
     }
 
     async function generateNewPairCode() {
-      if (!window.pywebview) return;
+      if (!window.pywebview || !window.pywebview.api) return;
+      document.getElementById('pairCodeDisplay').innerText = "......";
       const code = await window.pywebview.api.generate_pair_code();
       document.getElementById('pairCodeDisplay').innerText = code;
     }
@@ -1010,13 +1046,13 @@
           badge.style.background = "rgba(16, 185, 129, 0.15)";
           badge.style.color = "var(--accent-green)";
           badge.style.borderColor = "var(--accent-green)";
-          text.innerText = "E-Store Desktop System: Maximized Full Screen";
+          text.innerText = "E-Store Desktop System: Maximized";
         } else {
           badge.innerText = `Windowed (${window.innerWidth}x${window.innerHeight})`;
           badge.style.background = "rgba(2, 132, 199, 0.15)";
           badge.style.color = "var(--accent-cyan)";
           badge.style.borderColor = "rgba(6, 182, 212, 0.3)";
-          text.innerText = "E-Store Desktop System: Normal Window";
+          text.innerText = "E-Store Desktop System: Active";
         }
       }
     }
@@ -1031,10 +1067,8 @@
       checkWindowMaximizedState();
     }
 
-    // Direct event listener
     window.addEventListener('pywebviewready', initApp);
 
-    // DOMContentLoaded fallback + safety interval in case pywebview ready fired earlier
     document.addEventListener('DOMContentLoaded', () => {
       updateTime();
       checkWindowMaximizedState();

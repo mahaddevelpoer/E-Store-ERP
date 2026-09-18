@@ -584,3 +584,52 @@ class LocalDatabaseManager:
                 "total_records": len(rows)
             }
 
+    # --- SHOP & CLOUD SYNC PREFERENCES ---
+    def get_shop_settings(self) -> Dict[str, Any]:
+        default_url = "https://vdaqzfyijonojuwzwpyb.supabase.co"
+        default_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkYXF6Znlpam9ub2p1d3p3cHliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MjAzNjIsImV4cCI6MjEwNTE5NjM2Mn0.8be3HTOvti0FnOy5lX08gW5JnuyDFeq2OoeW5Lf0p9s"
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM shop_settings ORDER BY id ASC LIMIT 1")
+            row = cursor.fetchone()
+            if row:
+                res = dict(row)
+                if not (res.get('supabase_url') or '').strip():
+                    res['supabase_url'] = default_url
+                if not (res.get('supabase_key') or '').strip():
+                    res['supabase_key'] = default_key
+                return res
+            return {
+                "shop_name": "E-Store",
+                "phone": "+92 300 1234567",
+                "address": "Main Accessories Market",
+                "theme_mode": "Dark",
+                "currency": "PKR",
+                "receipt_footer": "Thank you for shopping at E-Store!",
+                "supabase_url": default_url,
+                "supabase_key": default_key
+            }
+
+    def save_shop_settings(self, settings: Dict[str, Any]) -> bool:
+        default_url = "https://vdaqzfyijonojuwzwpyb.supabase.co"
+        default_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkYXF6Znlpam9ub2p1d3p3cHliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MjAzNjIsImV4cCI6MjEwNTE5NjM2Mn0.8be3HTOvti0FnOy5lX08gW5JnuyDFeq2OoeW5Lf0p9s"
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            url = (settings.get('supabase_url') or '').strip() or default_url
+            key = (settings.get('supabase_key') or '').strip() or default_key
+            cursor.execute("""
+                UPDATE shop_settings SET
+                    shop_name = ?, phone = ?, address = ?, receipt_footer = ?,
+                    supabase_url = ?, supabase_key = ?
+                WHERE id = (SELECT id FROM shop_settings ORDER BY id ASC LIMIT 1)
+            """, (
+                settings.get('shop_name', 'E-Store'),
+                settings.get('phone', ''),
+                settings.get('address', ''),
+                settings.get('receipt_footer', 'Thank you for shopping at E-Store!'),
+                url, key
+            ))
+            conn.commit()
+            return True
+
+
