@@ -73,6 +73,16 @@ def main():
     pairing = DevicePairingService(db)
     api = EStoreJSAPI(db, pairing)
 
+    # Initialize and start background silent sync worker
+    settings = db.get_shop_settings()
+    sync_worker = SupabaseSyncWorker(
+        db_manager=db,
+        supabase_url=settings.get('supabase_url', ''),
+        supabase_key=settings.get('supabase_key', ''),
+        device_uuid=pairing.device_uuid
+    )
+    sync_worker.start()
+
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     html_path = os.path.join(base_path, "src", "web", "index.html")
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "79397447288",
+    "project_id": "estore-erp",
+    "storage_bucket": "estore-erp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79397447288:android:7169479dad76fd116fef8d",
+        "android_client_info": {
+          "package_name": "com.mahad.estorerp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkdPj98J_X9FR-3EDi2M6AVZiDhoi5WMg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

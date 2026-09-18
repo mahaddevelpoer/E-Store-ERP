@@ -539,6 +539,21 @@ class LocalDatabaseManager:
                 INSERT INTO udhaar_ledger (id, party_name, party_type, amount, type, notes, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             """, (rec_id, party_name.strip(), party_type.strip(), float(amount), entry_type.strip(), notes.strip(), now))
+
+            payload = {
+                "id": rec_id,
+                "party_name": party_name.strip(),
+                "party_type": party_type.strip(),
+                "amount": float(amount),
+                "type": entry_type.strip(),
+                "notes": notes.strip(),
+                "created_at": now
+            }
+            cursor.execute("""
+                INSERT INTO sync_queue (table_name, action, payload, created_at)
+                VALUES (?, ?, ?, ?)
+            """, ("udhaar_ledger", "INSERT_UDHAAR", json.dumps(payload), now))
+
             conn.commit()
             return rec_id
 

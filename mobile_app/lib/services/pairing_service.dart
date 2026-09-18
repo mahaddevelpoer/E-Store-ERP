@@ -31,10 +31,13 @@ class DevicePairingService {
         'device_name': deviceName,
       }).eq('pair_code', code);
 
-      // Save pairing state locally
+      final deviceUuid = response['device_uuid'] as String? ?? 'default_desktop';
+
+      // Save pairing state and device_uuid locally
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('is_paired', true);
       await prefs.setString('paired_code', code);
+      await prefs.setString('paired_device_uuid', deviceUuid);
 
       return true;
     } catch (e) {
@@ -45,5 +48,10 @@ class DevicePairingService {
   Future<bool> isDevicePaired() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('is_paired') ?? false;
+  }
+
+  Future<String?> getPairedDeviceUuid() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('paired_device_uuid');
   }
 }

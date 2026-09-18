@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -24,9 +25,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _fetchDashboardData() async {
     try {
-      final response = await supabase
-          .from('sales')
-          .select()
+      final prefs = await SharedPreferences.getInstance();
+      final pairedUuid = prefs.getString('paired_device_uuid');
+
+      var query = supabase.from('sales').select();
+      if (pairedUuid != null && pairedUuid.isNotEmpty) {
+        query = query.eq('device_uuid', pairedUuid);
+      }
+
+      final response = await query
           .order('created_at', ascending: false)
           .limit(20);
 

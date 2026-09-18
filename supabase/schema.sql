@@ -26,6 +26,7 @@ ON CONFLICT DO NOTHING;
 CREATE TABLE IF NOT EXISTS public.device_pairings (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     pair_code VARCHAR(6) UNIQUE NOT NULL,
+    device_uuid TEXT NOT NULL,
     fcm_token TEXT,
     device_name TEXT,
     status VARCHAR(20) NOT NULL DEFAULT 'pending',
@@ -54,21 +55,24 @@ ON CONFLICT (name) DO NOTHING;
 
 -- 4. Products Inventory Table
 CREATE TABLE IF NOT EXISTS public.products (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id TEXT PRIMARY KEY,
+    device_uuid TEXT NOT NULL DEFAULT 'default_pc',
     name TEXT NOT NULL,
     category_name TEXT NOT NULL DEFAULT 'General',
-    barcode TEXT UNIQUE,
+    barcode TEXT,
     cost_price NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
     selling_price NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
     stock_quantity INT NOT NULL DEFAULT 0,
     low_stock_threshold INT NOT NULL DEFAULT 5,
+    image_url TEXT DEFAULT '',
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- 5. Sales Transactions Table (With Split Hardware vs Media Service Revenue)
 CREATE TABLE IF NOT EXISTS public.sales (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id TEXT PRIMARY KEY,
+    device_uuid TEXT NOT NULL DEFAULT 'default_pc',
     receipt_number TEXT UNIQUE NOT NULL,
     total_amount NUMERIC(10, 2) NOT NULL,
     hardware_revenue NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
@@ -78,16 +82,17 @@ CREATE TABLE IF NOT EXISTS public.sales (
     payment_method TEXT NOT NULL DEFAULT 'Cash',
     discount NUMERIC(10, 2) DEFAULT 0.00,
     item_count INT NOT NULL DEFAULT 1,
+    status TEXT NOT NULL DEFAULT 'Completed',
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- 6. Sale Items Table (With Item Type Tag: 'Hardware' or 'MediaService')
 CREATE TABLE IF NOT EXISTS public.sale_items (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    sale_id UUID REFERENCES public.sales(id) ON DELETE CASCADE,
-    product_id UUID REFERENCES public.products(id) ON DELETE SET NULL,
+    id TEXT PRIMARY KEY,
+    sale_id TEXT REFERENCES public.sales(id) ON DELETE CASCADE,
+    product_id TEXT,
     product_name TEXT NOT NULL,
-    item_type TEXT NOT NULL DEFAULT 'Hardware', -- 'Hardware' or 'MediaService'
+    item_type TEXT NOT NULL DEFAULT 'Hardware',
     quantity INT NOT NULL,
     unit_price NUMERIC(10, 2) NOT NULL,
     unit_cost NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
@@ -96,11 +101,12 @@ CREATE TABLE IF NOT EXISTS public.sale_items (
 
 -- 7. Udhaar Ledger Table
 CREATE TABLE IF NOT EXISTS public.udhaar_ledger (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id TEXT PRIMARY KEY,
+    device_uuid TEXT NOT NULL DEFAULT 'default_pc',
     party_name TEXT NOT NULL,
-    party_type TEXT NOT NULL CHECK (party_type IN ('Customer', 'Supplier')),
+    party_type TEXT NOT NULL,
     amount NUMERIC(10, 2) NOT NULL,
-    type TEXT NOT NULL CHECK (type IN ('Given', 'Received')),
+    type TEXT NOT NULL,
     notes TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
